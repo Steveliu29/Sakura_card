@@ -22,19 +22,19 @@ The cards can be dealed as a combination and have a more powerful effect on othe
 # Elaboration on Every Card's Effects
 ## Note for combo attack: 
 Total damage is calculated by simply adding on the damage each card in this combo will cause. Several combos may cause more damage. See details below.<br />
-Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect.<br />
+Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect. Dark and Light cards combo <br />
 **Example:** A combo of 1 windy and 1 watery card needs 5 less-than-three-star defending cards or 2 element cards to dodge. <br />
 Partial dodge is allowed.<br />
 ### Cards' Effects
-1. Windy (Three-star attacking & three-star defending element card)<br />
-Windy is used to cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
+1. Windy (Three-star attacking & three-star defending card & element card)<br />
+Can cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
 Number of defending cards to dodge combo with Watery/Firey/Earthy card follows the rule in the note.<br />
-**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately if no defending cards are used. Move card is not allowed (see *Move* below).<br />
+**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
 2. Shadow (Two-star defending card)<br />
-Shadow cannot be used as defending card for Light and Dark cards. <br />
+Cannot be used as defending card for Light and Dark cards. <br />
 Can be used together with Dark card as scroll card to enter invisible status (See *Dark* below).<br />
 3. Illusion (One-star attacking card & two-star defending card & time-delayed scroll card)<br />
-If the judging card is in the range of specific minimum and maximum cards, this player's will be skipped for 1 turn.<br />
+If the judging card is in the range of the player's minimum and maximum cards, this player will be skipped for 1 turn.<br />
 Can be used together with Maze card (see *Maze* below).<br />
 4. Flower (Scroll card)<br />
 Recover 1 hp for the player.<br />
@@ -54,5 +54,35 @@ Can be used singly to defend Watery card.<br />
 Can be used together with Rain card to cause 1 damage in the next turn for the target player. No way to avoid.<br />
 13. Arrow (One-star attacking card)<br />
 Can be used together with Firey/Watery/Light card as a combo attack. This combo cannot use Mirror card to deflect (see *Mirror* below). <br />
-
-
+14. Light (Four-star attacking card & three-star defending card & element card)
+Can cause 2 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. One less-than-three-star defending card lessens 1 damage.<br />
+Can be used together with Dark card as a combo attack. This combo can cause *5* damage and 6 less-than-three-star cards are required to dodge. No Move card is allowed.(See *Move* below). Mirror card can be used to deflect.<br />
+Can be used together with Firey card as a combo attack. Number of defending cards to dodge this combo follows the rule in the note.<br />
+15. Twin (Scroll card)<br />
+Can be used to draw 2 more cards.<br />
+Can be used together with other scroll or attacking cards to double the effect (for attacking cards, player can choose to double the damage or to double the number of defending cards to dodge).<br />
+16. Tree (Two-star defending card)<br />
+Can be used singly to defend Earthy card.<br />
+Cannot be used to defend Firey card. <br />
+17. Shield (Two-star defending card)<br />
+Can be used together with Watery card to defend all kinds of attack except for the Watery/Firey/Windy/Earthy full combo one (see explanation in *Windy*).<br />
+18. Power (One-star attacking card)<br />
+19. Loop (Scroll card)<br />
+Specify another player to take over your current turn.<br />
+20. Mirror (One-star defending card)<br />
+Can be used to deflect Light/Firey/Watery/Thunder/Shot/Thunder+Shot attack.<br />
+21. Big (Scroll card)<br />
+Can be used to draw 2 more cards.<br />
+Can be used together with other scroll or attacking cards to have +1 effect (for attacking cards, player can choose to increase 1 damage or to increase 1 defending card to dodge).<br />
+22. Change (Scroll card)<br />
+Exchange all of your cards with another player's cards.<br />
+23. Firey (Three-star attacking card & three-star defending card & element card)<br />
+Can cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
+Number of defending cards to dodge combo with Watery/Windy/Earthy card follows the rule in the note.<br />
+Can be deflected by Mirror card.<br />
+Can be used together with Sword card as a combo attack. This combo ignores all kinds of defend except for Watery+Shield combo/Time (see *Time* below)/Return (see *Return* below)/Invisible Status (see *Dark* below).<br />
+**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
+24. Voice (Scroll card)<br />
+Can be used to eliminate effect caused by Silent card (see *Silent* below).<br />
+25. Lock (Two-star defending card)<br />
+26. Cloud (Two-star attacking card & two-star defending card)<br />
