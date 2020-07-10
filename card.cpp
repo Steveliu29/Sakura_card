@@ -1,6 +1,13 @@
 #include <iostream>
 #include "card.h"
 
+Card::Card(){
+		this -> number = 0; // 0 as Card ID represents an empty card
+		this -> name = "EMPTY";
+		this -> instruction = "";
+
+}
+
 void Card::display(){
 	std::cout<<"#"<<this->number<<" "<<this->name<<std::endl;
 	std::cout<<this->instruction;
