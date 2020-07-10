@@ -66,21 +66,21 @@ Card Deck::get_card(unsigned int index){
 // The same applies to the latter cards. All the cards after the provided index will be shifted by 1 index
 //
 void Deck::add_card(Card card_to_add, unsigned int index){
-    deck_of_cards.insert(index, card_to_add);
+    deck_of_cards.insert(deck_of_cards.begin()+ index, card_to_add);
     this -> deck_size++;
 }
 
 // Overloaded function that adds a card to a specific index, the default position to add is the end of deck
 //
 void Deck::add_card(Card card_to_add){
-    deck_of_cards.emplace_back(card_to_add)
+    deck_of_cards.emplace_back(card_to_add);
     this -> deck_size++;
 }
 
 // Function that removes a card from the deck.
 //
 void Deck::remove_card(unsigned int index){
-    deck_of_cards.erase(index);
+    deck_of_cards.erase(deck_of_cards.begin() + index);
     this -> deck_size--;
 }
 
@@ -139,7 +139,7 @@ Deck Deck::split_deck(unsigned int index){
     Deck deck_splitted{};
     for (auto it = index; it < deck_size; it ++){
         deck_splitted.add_card(deck_of_cards[index]);
-        deck_of_cards.remove_card(index);
+        this -> remove_card(index);
     }
 
     return deck_splitted;
@@ -156,7 +156,7 @@ void Deck::perfect_shuffle(){
     Deck half_deck = split_deck(half);
 
     for (auto it = 0 ; it < half_deck.get_deck_size() ; it ++)
-        deck_of_cards.add_card(half_deck.get_card(it), it*2);
+        this -> add_card(half_deck.get_card(it), it*2);
 
     half_deck.clear();
 }
@@ -170,7 +170,7 @@ void Deck::single_shuffle(unsigned int n)
 
 	//construct a new deck
 	Card deck_tmp[deck_size];
-	
+
 	if (n>deck_size/2)
 	{
 		//alternative selection
@@ -181,7 +181,7 @@ void Deck::single_shuffle(unsigned int n)
 		}
 		//load the remaining cards
 		for(change=deck_size-n;change<n;change++)
-			deck_tmp[DeckSize-n+change]=deck_of_cards[change];
+			deck_tmp[deck_size-n+change]=deck_of_cards[change];
 	}else{
 		for(change=0;change<n;change++)
 		{
