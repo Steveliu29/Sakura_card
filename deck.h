@@ -1,3 +1,5 @@
+#ifndef _DECK_H_
+#define _DECK_H_
 //This is the deck class
 //
 class Deck{
@@ -23,4 +25,6 @@ public:
     void merge_deck(Deck& deck_to_merge);
     Deck split_deck(unsigned int index);
     void random_shuffle();
+    void single_shuffle(unsigned int n);
 };
+#endif

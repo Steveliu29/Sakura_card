@@ -162,5 +162,39 @@ void Deck::perfect_shuffle(){
     half_deck.clear();
 }
 
+void Deck::single_shuffle(unsigned int n)
+{
+	unsigned int change;
+	//for the cards that has been used
+	//reset the encoded suit
+	//all the cards used are at the left most position of the deck
+
+	//construct a new deck
+	Card deck_tmp[deck_size];
+	
+	if (n>deck_size/2)
+	{
+		//alternative selection
+		for(change=0;change<deck_size-n;change++)
+		{
+			deck_tmp[change*2]=deck_of_cards[n+change];
+			deck_tmp[change*2+1]=deck_of_cards[change];
+		}
+		//load the remaining cards
+		for(change=deck_size-n;change<n;change++)
+			deck_tmp[DeckSize-n+change]=deck_of_cards[change];
+	}else{
+		for(change=0;change<n;change++)
+		{
+			deck_tmp[change*2]=deck_of_cards[n+change];
+			deck_tmp[change*2+1]=deck_of_cards[change];
+		}
+		for(change=2*n;change<deck_size;change++)
+			deck_tmp[change]=deck_of_cards[change];
+	}
+	//assign the new deck to the old deck
+	for (change=0;change<deck_size;change++)
+		deck_of_cards[change]=deck_tmp[change];
+}
 // Haven't decide what to do for random shuffling hahaha
 //
