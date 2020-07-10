@@ -29,7 +29,7 @@ Partial dodge is allowed.<br />
 1. Windy (Three-star attacking & three-star defending element card)<br />
 Windy is used to cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
 Number of defending cards to dodge combo with Watery/Firey/Earthy card follows the rule in the note.<br />
-**Note:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately if no defending cards are used. Move card is not allowed (see *Move* below).<br />
+**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately if no defending cards are used. Move card is not allowed (see *Move* below).<br />
 2. Shadow (Two-star defending card)<br />
 Shadow cannot be used as defending card for Light and Dark cards. <br />
 Can be used together with Dark card as scroll card to enter invisible status (See *Dark* below).<br />
