@@ -5,6 +5,7 @@ private:
     std::vector<Card> deck_of_cards;
     unsigned int deck_size;
     void perfect_shuffle();
+    void clear();
 
 public:
     Deck ();
@@ -13,8 +14,10 @@ public:
     Deck operator+ (Deck deck_to_add);
     unsigned int get_deck_size ();
     Card get_card(unsigned int index);
-    void add_card(Card card_to_add, unsigned int index = deck_size);
-    void remove_card(unsigned int index = deck_size - 1);
+    void add_card(Card card_to_add, unsigned int index);
+    void add_card(Card card_to_add);
+    void remove_card(unsigned int index);
+    void remove_card();
     void set_size(unsigned int size);
     void set_card(unsigned int index, Card card_to_set);
     void merge_deck(Deck& deck_to_merge);

@@ -1,3 +1,4 @@
+#include "deck.h"
 // Function definitions for the Deck class
 //
 
@@ -40,6 +41,13 @@ Deck::Deck(unsigned int size){
     this -> deck_size = size;
 }
 
+// Funtion that clears all the element in a deck
+//
+void Deck::clear(){
+    deck_of_cards.clear();
+    this -> deck_size = 0;
+}
+
 // Getter for the deck size
 //
 unsigned int Deck::get_deck_size(){
@@ -53,20 +61,34 @@ Card Deck::get_card(unsigned int index){
     return this -> deck_of_cards[index];
 }
 
-// Function that adds a card to a specific index, the default position to add is the end of deck
+// Function that adds a card to a specific index
 // The card will be placed on the index provided, the original card on the same index will be pushed to the next index.
 // The same applies to the latter cards. All the cards after the provided index will be shifted by 1 index
 //
-void Deck::add_card(Card card_to_add, unsigned int index = deck_size){
+void Deck::add_card(Card card_to_add, unsigned int index){
     deck_of_cards.insert(index, card_to_add);
+    this -> deck_size++;
+}
+
+// Overloaded function that adds a card to a specific index, the default position to add is the end of deck
+//
+void Deck::add_card(Card card_to_add){
+    deck_of_cards.emplace_back(card_to_add)
     this -> deck_size++;
 }
 
 // Function that removes a card from the deck.
 // The default index for removal is the end of deck
 //
-void Deck::remove_card(unsigned int index = deck_size - 1){
+void Deck::remove_card(unsigned int index){
     deck_of_cards.erase(index);
+    this -> deck_size--;
+}
+
+// Function that removes a card from the deck.The default index for removal is the end of deck
+//
+void Deck::remove_card(){
+    deck_of_cards.erase( deck_of_cards.end() );
     this -> deck_size--;
 }
 
@@ -77,11 +99,11 @@ void Deck::remove_card(unsigned int index = deck_size - 1){
 // This function is for developing and testing purpose, always use add_card function to add a card
 //
 void Deck::set_size(unsigned int size){
-    unsigned int diff = std::abs(size-deck_size);
+    unsigned int diff = labs(size - deck_size);
 
     for (auto it = 0; it < diff; it ++){
         if (size > deck_size){
-            Card empty_card();
+            Card empty_card{};
             this -> add_card(empty_card);
         }
         else if (size < deck_size){
@@ -104,7 +126,7 @@ void Deck::set_card(unsigned int index, Card card_to_set){
 //
 void Deck::merge_deck(Deck& deck_to_merge){
     for (auto it = 0; it < deck_to_merge.get_deck_size(); it ++)
-        deck_of_cards.add_card(deck_to_merge.get_card(it));
+        this -> add_card(deck_to_merge.get_card(it));
     deck_to_merge.clear();
 }
 
@@ -137,7 +159,7 @@ void Deck::perfect_shuffle(){
     for (auto it = 0 ; it < half_deck.get_deck_size() ; it ++)
         deck_of_cards.add_card(half_deck.get_card(it), it*2);
 
-    hald_deck.clear();
+    half_deck.clear();
 }
 
 // Haven't decide what to do for random shuffling hahaha
