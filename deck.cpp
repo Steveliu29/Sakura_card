@@ -78,14 +78,13 @@ void Deck::add_card(Card card_to_add){
 }
 
 // Function that removes a card from the deck.
-// The default index for removal is the end of deck
 //
 void Deck::remove_card(unsigned int index){
     deck_of_cards.erase(index);
     this -> deck_size--;
 }
 
-// Function that removes a card from the deck.The default index for removal is the end of deck
+// Overloaded Function that removes a card from the deck.The default index for removal is the end of deck
 //
 void Deck::remove_card(){
     deck_of_cards.erase( deck_of_cards.end() );
