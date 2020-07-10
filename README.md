@@ -21,38 +21,38 @@ The skill cards have some special effects, such as ignoring one's turn, drawing 
 The cards can be dealed as a combination and have a more powerful effect on others. The combination is not arbitrary and the specific combinations with other cards are written in the instruction of each card.
 # Elaboration on Every Card's Effects
 ## Note for combo attack: 
-Total damage is calculated by simply adding on the damage each card in this combo will cause. Several combos may cause more damage. See details below.
-Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect.  
-**Example:** A combo of 1 windy and 1 watery card needs 5 less-than-three-star defending cards or 2 element cards to dodge. 
-Partial dodge is allowed.
+Total damage is calculated by simply adding on the damage each card in this combo will cause. Several combos may cause more damage. See details below.<br />
+Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect.<br />
+**Example:** A combo of 1 windy and 1 watery card needs 5 less-than-three-star defending cards or 2 element cards to dodge. <br />
+Partial dodge is allowed.<br />
 ### Cards' Effects
-1. Windy (Three-star attacking & three-star defending element card)
-Windy is used to cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. 
-Number of defending cards to dodge combo with Watery/Firey/Earthy card follows the rule in the note.
-**Note:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately if no defending cards are used. Move card is not allowed (see *Move* below).
-2. Shadow (Two-star defending card)
-Shadow cannot be used as defending card for Light and Dark cards. 
-Can be used together with Dark card as scroll card to enter invisible status (See *Dark* below).
-3. Illusion (One-star attacking card & two-star defending card & time-delayed scroll card)
-If the judging card is in the range of specific minimum and maximum cards, this player's will be skipped for 1 turn.
-Can be used together with Maze card (see *Maze* below).
-4. Flower (Scroll card)
-Recover 1 hp for the player.
-5. Mist (Two-star attacking & two-star defending card)
-6. Storm (Two-star attacking card)
-7. Float (One-star defending card)
-8. Fight (One-star attacking card)
-9. Song (Scroll card)
-Recover 1 hp for the player.
-10. Shot (One-star attacking card)
-When the player uses defending card(s), he/she can make a combo attack of Thunder and Shot cards to another player. 2 two-star defending cards are required to dodge. Mirror card can deflect this combo (see *Mirror* below).
-11. Sweet (Scroll card)
-Recover 1 hp for the player.
-12. Freeze (Two-star defending card & time-delayed scroll card)
-The target player will skip his/her *next* turn. Can use Firey card to avoid this effect.
-Can be used singly to defend Watery card.
-Can be used together with Rain card to cause 1 damage in the next turn for the target player. No way to avoid.
-13. Arrow (One-star attacking card)
-Can be used together with Firey/Watery/Light card as a combo attack. This combo cannot use Mirror card to deflect (see *Mirror* below). 
+1. Windy (Three-star attacking & three-star defending element card)<br />
+Windy is used to cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
+Number of defending cards to dodge combo with Watery/Firey/Earthy card follows the rule in the note.<br />
+**Note:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately if no defending cards are used. Move card is not allowed (see *Move* below).<br />
+2. Shadow (Two-star defending card)<br />
+Shadow cannot be used as defending card for Light and Dark cards. <br />
+Can be used together with Dark card as scroll card to enter invisible status (See *Dark* below).<br />
+3. Illusion (One-star attacking card & two-star defending card & time-delayed scroll card)<br />
+If the judging card is in the range of specific minimum and maximum cards, this player's will be skipped for 1 turn.<br />
+Can be used together with Maze card (see *Maze* below).<br />
+4. Flower (Scroll card)<br />
+Recover 1 hp for the player.<br />
+5. Mist (Two-star attacking & two-star defending card)<br />
+6. Storm (Two-star attacking card)<br />
+7. Float (One-star defending card)<br />
+8. Fight (One-star attacking card)<br />
+9. Song (Scroll card)<br />
+Recover 1 hp for the player.<br />
+10. Shot (One-star attacking card)<br />
+When the player uses defending card(s), he/she can make a combo attack of Thunder and Shot cards to another player. 2 two-star defending cards are required to dodge. Mirror card can deflect this combo (see *Mirror* below).<br />
+11. Sweet (Scroll card)<br />
+Recover 1 hp for the player.<br />
+12. Freeze (Two-star defending card & time-delayed scroll card)<br />
+The target player will skip his/her *next* turn. Can use Firey card to avoid this effect.<br />
+Can be used singly to defend Watery card.<br />
+Can be used together with Rain card to cause 1 damage in the next turn for the target player. No way to avoid.<br />
+13. Arrow (One-star attacking card)<br />
+Can be used together with Firey/Watery/Light card as a combo attack. This combo cannot use Mirror card to deflect (see *Mirror* below). <br />
 
 
