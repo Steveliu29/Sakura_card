@@ -5,8 +5,8 @@ class Card{
 private:
 	//information to display to the player
 	unsigned int number;
-	string name;
-	string instruction;
+	std::string name;
+	std::string instruction;
 public:
 	void display();//show the information of the single card
 	void operator = (Card card_to_assign);
