@@ -22,7 +22,7 @@ The cards can be dealed as a combination and have a more powerful effect on othe
 # Elaboration on Every Card's Effects
 ## Note for combo attack: 
 Total damage is calculated by simply adding on the damage each card in this combo will cause. Several combos may cause more damage. See details below.<br />
-Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect. Dark and Light cards combo <br />
+Number of defending cards to fully dodge combo attacks follows this rule: number of defending cards for every attacking card in the combo plus 1 more for special effect. Does not apply to Dark and Light cards combo. See details below.<br />
 **Example:** A combo of 1 windy and 1 watery card needs 5 less-than-three-star defending cards or 2 element cards to dodge. <br />
 Partial dodge is allowed.<br />
 ### Cards' Effects
