@@ -69,6 +69,30 @@ Card Deck::get_card(unsigned int index){
     return this -> deck_of_cards[index];
 }
 
+// Function that linearly searches for a card in the deck
+// return TRUE if the card is in the deck, FALSE if not in the deck
+//
+bool Deck::search_card(Card card_to_search){
+    for (auto it = 0; it < deck_size; it++){
+        if (card_to_search == deck_of_cards[it])
+            return true
+    }
+    return false;
+}
+
+// Overloaded Function for the previous linear search function
+// the index of the card is returned by reference
+//
+bool Deck::search_card(Card card_to_search, unsigned int& index_to_return){
+    for (auto it = 0; it < deck_size; it++){
+        if (card_to_search == deck_of_cards[it]){
+            index_to_return = it;
+            return true;
+        }
+    }
+    return false;
+}
+
 // Function that adds a card to a specific index
 // The card will be placed on the index provided, the original card on the same index will be pushed to the next index.
 // The same applies to the latter cards. All the cards after the provided index will be shifted by 1 index
