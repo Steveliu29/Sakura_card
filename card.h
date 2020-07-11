@@ -11,5 +11,6 @@ public:
 	Card ();
 	void display();//show the information of the single card
 	void operator = (Card card_to_assign);
+	bool operator == (Card card_to_compare); 
 };
 #endif
