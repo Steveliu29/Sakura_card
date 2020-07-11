@@ -23,7 +23,7 @@ private:
     Deck card_in_hand{};
     Deck card_for_judgement{};
     bool is_alive;
-    enum Status status;
+    std::vector<enum Status> status;
 
 public:
     Player();
