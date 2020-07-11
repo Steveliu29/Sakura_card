@@ -69,6 +69,15 @@ Card Deck::get_card(unsigned int index){
     return this -> deck_of_cards[index];
 }
 
+// Function check if the current deck is empty
+//
+bool Deck::isEmpty(){
+    if (deck_size == 0)
+        return true;
+    else
+        return false;
+}
+
 // Function that linearly searches for a card in the deck
 // return TRUE if the card is in the deck, FALSE if not in the deck
 //
@@ -239,4 +248,24 @@ void Deck::single_shuffle(unsigned int n)
 	//assign the new deck to the old deck
 	for (change=0;change<deck_size;change++)
 		deck_of_cards[change]=deck_tmp[change];
+}
+
+// Function deal card from the current deck to another deck
+// By default, the first card will be dealt
+//
+void Deck::deal_card_to (Deck& deck_to_receive){
+    if (!isEmpty()){
+        deck_to_receive.add_card(this -> deck_of_cards[0]);
+        this -> remove_card(0);
+    }
+}
+
+// Overloaded function deal card from the current deck to another deck
+// You can choose the index of the card you want to deal from the current deck
+//
+void Deck::deal_card_to (Deck& deck_to_receive, unsigned int index_to_deal){
+    if (index_to_deal < this -> deck_size){
+        deck_to_receive.add_card(this -> deck_of_cards[index_to_deal]);
+        this -> remove_card(index_to_deal);
+    }
 }

@@ -25,6 +25,7 @@ public:
     Deck                  operator+               (Deck deck_to_add);
     unsigned int          get_deck_size           ();
     Card                  get_card                (unsigned int index);
+    bool                  isEmpty                 ();
     bool                  search_card             (Card card_to_search); // simply tell you if the card is in the deck or not
     bool                  search_card             (Card card_to_search, unsigned int& index_to_return); // this also return the index of the card by reference
     void                  add_card                (Card card_to_add, unsigned int index);
@@ -37,5 +38,7 @@ public:
     Deck                  split_deck              (unsigned int index);
     void                  random_shuffle          ();
     void                  single_shuffle          (unsigned int n);
+    void                  deal_card_to            (Deck& deck_to_receive);
+    void                  deal_card_to            (Deck& deck_to_receive, unsigned int index_to_deal);
 };
 #endif
