@@ -44,36 +44,28 @@ Damage Card::deal_damage(){
 
 int Card::identify(){return this->number;}
 
-static enum Combo combo_check(int card_amount_in_combo, std::vector<int> card_number_in_combo){
+enum Combo Card::combo_check(int card_amount_in_combo, std::vector<Card> card_in_combo){
+	Card this_card(this->number);
+	card_in_combo.push_back(this_card);//have all the cards to check combo ready
 	enum Combo result;
 	switch (card_amount_in_combo){
 		case 2: break;//unfinished
 		case 3: //finished
 		case 4:	//use recursion to check the element combo
-			switch (card_number_in_combo[card_amount_in_combo-1]){
+			switch (card_in_combo[card_amount_in_combo-1].identify()){
 				case WINDY:
 				case FIREY:
 				case WATERY:
-				case EARTHY: result=combo_check(card_amount_in_combo-1,card_number_in_combo);
-					     if (result!=Invalid) 
+				case EARTHY: result=combo_check(card_amount_in_combo-1,card_in_combo);
+					     if (result!=Invalid) //determine the final result for combo
 						     if(card_amount_in_combo==3)
 							     result=Triple_Element;
 						     else result=Quadra_Element;
 					     break;
+				//no combo is valid without an element card
 				default: result=Invalid;break;
 			}break;
-		default: result=Invalid;break;
+		default: result=Invalid;break;//no combo is valid with more than 4 cards
 	}
 	return result;
-}
-
-Windy::Windy():Card(0){}
-
-enum Combo Windy::combo(int card_amount_in_combo,std::vector <Card> card_in_combo){
-	//add this card to the vector
-	Card this_card(number);
-	card_in_combo.push_back(this_card);
-	std::vector <int> card_number_in_combo;
-	for (int i=0;i<card_amount_in_combo;i++) card_number_in_combo.push_back(card_in_combo[i].identify());
-	return combo_check(card_amount_in_combo,card_number_in_combo);
 }
