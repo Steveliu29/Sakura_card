@@ -1,7 +1,16 @@
+/**
+    Project Sakura Card
+    deck.h
+    Purpose: class member function declaration for deck class
+    Declare all functions in the deck class
+
+    Author Steveliu29
+    Version 1.01  - 10/07/2020
+*/
+
 #ifndef _DECK_H_
 #define _DECK_H_
-//This is the deck class
-//
+
 class Deck{
 private:
     std::vector<Card> deck_of_cards;

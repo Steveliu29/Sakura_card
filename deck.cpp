@@ -1,6 +1,14 @@
+/**
+    Project Sakura Card
+    deck.cpp
+    Purpose: class member function definition for deck class
+    Implement all functions in the deck class
+
+    Author Steveliu29
+    Version 1.01  - 10/07/2020
+*/
+
 #include "deck.h"
-// Function definitions for the Deck class
-//
 
 // Operator '=' is overloaded to assign the value of one deck to the other
 //
@@ -66,8 +74,13 @@ Card Deck::get_card(unsigned int index){
 // The same applies to the latter cards. All the cards after the provided index will be shifted by 1 index
 //
 void Deck::add_card(Card card_to_add, unsigned int index){
-    deck_of_cards.insert(deck_of_cards.begin()+ index, card_to_add);
-    this -> deck_size++;
+    if (index < this -> deck_size){
+        deck_of_cards.insert(deck_of_cards.begin()+ index, card_to_add);
+        this -> deck_size++;
+    }
+    else{
+        // EXCEPTIONS SHOULD BE DEFINED FOR INVALID INSERTION AT UNREASEONABLE INDEX
+    }
 }
 
 // Overloaded function that adds a card to a specific index, the default position to add is the end of deck
@@ -80,15 +93,19 @@ void Deck::add_card(Card card_to_add){
 // Function that removes a card from the deck.
 //
 void Deck::remove_card(unsigned int index){
-    deck_of_cards.erase(deck_of_cards.begin() + index);
-    this -> deck_size--;
+    if (index < this -> deck_size){
+        deck_of_cards.erase(deck_of_cards.begin() + index);
+        this -> deck_size--;
+    }
 }
 
 // Overloaded Function that removes a card from the deck.The default index for removal is the end of deck
 //
 void Deck::remove_card(){
-    deck_of_cards.erase( deck_of_cards.end() );
-    this -> deck_size--;
+    if (this -> deck_size > 0){
+        deck_of_cards.erase( deck_of_cards.end() );
+        this -> deck_size--;
+    }
 }
 
 // Function that sets the size for the deck
@@ -136,14 +153,18 @@ void Deck::merge_deck(Deck& deck_to_merge){
 // It might have some interesting usage, so I put it in public class
 //
 Deck Deck::split_deck(unsigned int index){
-    Deck deck_splitted{};
-    for (auto it = index; it < deck_size; it ++){
-        deck_splitted.add_card(deck_of_cards[index]);
-        this -> remove_card(index);
+    if (index < this -> deck_size){
+        Deck deck_splitted{};
+
+        // Since the deck_size will decrease by 1 everytime we remove a card from it
+        // We can keep removing at the same index until the deck_size shrink to be less than the index
+        //
+        while (index < this -> deck_size){
+            deck_splitted.add_card(deck_of_cards[index]);
+            this -> remove_card(index);
+        }
+        return deck_splitted;
     }
-
-    return deck_splitted;
-
 }
 
 // This function does a perfect shuffle on the current deck of cards
@@ -195,5 +216,3 @@ void Deck::single_shuffle(unsigned int n)
 	for (change=0;change<deck_size;change++)
 		deck_of_cards[change]=deck_tmp[change];
 }
-// Haven't decide what to do for random shuffling hahaha
-//
