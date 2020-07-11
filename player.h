@@ -11,11 +11,19 @@
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
 
+enum Status{
+    invisible,
+    nightmare,
+    judger,
+    maze_through};
+
 class Player{
 private:
     int health;
     Deck card_in_hand{};
+    Deck card_for_judgement{};
     bool is_alive;
+    enum Status status;
 
 public:
     Player();
