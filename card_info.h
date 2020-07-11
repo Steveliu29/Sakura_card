@@ -1,10 +1,6 @@
-#ifndef _CARD_INFO_
-#define _CARD_INFO_
-const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float",
-"Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Tree","Shield","Power","Loop",
-"Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent",
-"Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword",
-"Loop","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
+#ifndef _CARD_INFO_H_
+#define _CARD_INFO_H_
+const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float","Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Tree","Shield","Power","Loop","Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent","Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword","Loop","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
 
 const std::string INS[52];
 
@@ -60,4 +56,8 @@ const std::string INS[52];
 #define DREAM 49;
 #define LIBRA 50;
 #define EARTHY 51;
+
+const int ATTACK[52]={3,0,1,0,2,2,0,1,0,1,0,0,1,4,0,0,0,1,0,0,0,0,3,0,0,2,4,3,2,0,0,0,0,0,0,0,1,0,0,1,0,2,1,0,0,0,0,2,0,0,0,3};//0 when the card cannot be used as an attack card
+const int DEFEND[52]={3,2,2,0,2,0,1,0,0,0,0,2,0,3,0,2,2,0,0,-1,0,0,3,0,2,2,3,3,0,1,0,5,0,0,5,1,2,1,2,0,1,0,0,-1,-1,-2,0,0,0,0,0,3};//0 when the card cannot be used as a defend card, -1 when the card is a special defend card, -2 when the card is "the little"
+
 #endif

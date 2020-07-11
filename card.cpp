@@ -6,8 +6,8 @@ Card::Card(){
 		this -> number 				= 0; // 0 as Card ID represents an empty card
 		this -> name 					= "EMPTY";
 		this -> instruction 	= "";
-
 }
+
 Card::Card(unsigned int num){
 		this -> number=num;
 		this -> name=NAME[num];
@@ -34,19 +34,42 @@ bool Card::operator== (Card card_to_compare){
 
 Damage Card::deal_damage(){
 	Damage result;
-	//initialization
 	result.damage=1;
-	result.card_to_defend=1;
-	//special cards
-	if (name=="Light"||name=="Dark"){
-		result.damage=2;
-		result.card_to_defend=2;
-	}else if (name=="Windy"||name=="Firey"||name=="Watery"||name=="Earthy")
-		result.card_to_defend=2;
+	//special cards for the light and dark
+	if (this->number==LIGHT||this->number==DARK) result.damage=2;
+	result.star=ATTACK[this->number];
+	result.type=this->number;
+	return result;
+}
 
+static enum Combo combo_check(int card_num_in_combo;vector <Card> card_in_combo){
+	enum Combo result;
+	switch (card_num_in_combo){
+		case 2: break;//unfinished
+		case 3: //finished
+		case 4:	//use recursion to check the element combo
+			switch (card_in_combo[card_num_in_combo-1].number){
+				case WINDY:
+				case FIREY:
+				case WATERY:
+				case EARTHY: result=combo_check(card_num_in_combo-1,card_in_combo);
+					     if (result!=invalid) 
+						     if(card_num_in_combo==3)
+							     result=Triple_Element;
+						     else result=Quadra_Element;
+					     break;
+				default: result=invalid;break;
+			}break;
+		default: result=invalid;break;
+	}
 	return result;
 }
 
 Windy::Windy():Card(0){}
 
-
+enum Combo Windy::combo(int card_num_in_combo;vector <Card> card_in_combo){
+	//add this card to the vector
+	Card this_card(this->number);
+	card_in_combo.push_back(this_card);
+	return combo_check(card_num_in_combo,card_in_combo);
+}
