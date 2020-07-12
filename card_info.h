@@ -1,6 +1,6 @@
 #ifndef _CARD_INFO_H_
 #define _CARD_INFO_H_
-const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float","Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Tree","Shield","Power","Loop","Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent","Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword","Loop","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
+const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float","Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Tree","Shield","Power","Loop","Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent","Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword","Glow","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
 
 const std::string INS[52];
 
