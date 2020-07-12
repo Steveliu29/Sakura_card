@@ -17,7 +17,7 @@ We mainly divides cards according to their effects into three kinds: attacking c
 For the attacking cards and the defending cards, they have their own star level to identify their power. For an attacking card with one star, it can be defended by a defending card with more than one star. For an attacking card with two stars it can be defended by one defending card with more than two stars or by two defending cards with one star. Note that Some special attacking-defending rules are applied for some cards and the special rules are of higher priority.</br>
 Some cards are both an attacking card and a defending card and they can act as either an attacking card or a defending card at a single time.</br>
 There are six special cards, called "element card", which are #1Windy, #14Light, #23 Firey, #27Dark, #28Watery, #52Earthy. For Windy, Firey, Watery, Earthy, two defending cards with less than three stars or one element card is required to dodge or they will cause 1 damage. For Light and Dark, two defending cards with less than 3 stars or one element card is required to dodge or they will cause 2 damage. If a player only uses one valid defending card with less than 3 stars, they will be dealt 1 damage. There are also some special attacking-defending rules for the element cards and these special rules are of higher priority.</br>
-The skill cards have some special effects, such as ignoring one's turn, drawing more cards or entering special modes, etc. Detailed information is written in the instruction of the cards.</br>
+The skill cards have some special effects, such as ignoring one's turn, drawing more cards or entering special status, etc. Detailed information is written in the instruction of the cards.</br>
 The cards can be dealed as a combination and have a more powerful effect on others. The combination is not arbitrary and the specific combinations with other cards are written in the instruction of each card.</br>
 # Elaboration on Every Card's Effects
 ## Note for combo attack: 
@@ -122,3 +122,40 @@ Cannot be used to defend Watery card.<br />
 39. Wave (Two-star defending card)<br />
 Cannot be used to defend Watery card.<br />
 Can be used singly to defend Firey card.<br />
+40. Sand (One-star attacking card) <br />
+41. Fly (One-star defending card)<br />
+Cannot be used to defend Windy card.<br />
+42. Thunder (Two-star attacking card)<br />
+When the player uses defending card(s), he/she can make a combo attack of Thunder and Shot cards to another player. 2 two-star defending cards are required to dodge. Can be deflected by Mirror.<br />
+43. Sword (One-star attacking card)<br />
+Can be used together with Firey/Watery/Light card as a combo attack which cannot be deflected by Mirror (for Firey and Sword cards combo, see *Firey* above).<br />
+44. Loop (One-star defending card & scroll card)<br />
+After using Loop card for 3 turns, no players can enter invisible status.<br />
+Can be used singly to defend Dark card.<br />
+Can be used together with Light card as a combo attack which causes 1 more damage.<br />
+45. Move (Scroll card)<br />
+Can be used to transfer an attack to another specified player. Cannot be used for some kinds of attack (see instructions above).<br />
+Can be used to transfer 1 card from the player to another specified player.<br />
+46. Little (Time-delayed scroll card & two-star defending card)<br />
+Let target player discard 1 card.<br />
+Cannot be used with Big/Twin and other defending cards together.<br />
+47. Maze (Time-delayed scroll card)<br />
+If the judgement card is not bigger than the target player's biggest card, the target player will be skipped for 1 turn.<br />
+Can be used together with Through card (see *Through* below).<br />
+Can be used together with Illusion card and the target player will be skipped for 2 turns. Can be eliminated by Through card (see *Through* below).<br />
+48. Snowy (Two-star attacking card)<br />
+49. Through (Scroll card)<br />
+Must be used together with Maze card to defend one-star attacking cards for 3 turns or two-star attacking cards for 2 turns or three-star attacking cards for 1 turn.<br />
+Cannot be used together with Maze card to defend four-star or higher attacking cards.<br />
+Can be used to eliminate the status caused by Maze card (see *Maze* above).<br />
+50. Dream (One-star scroll card)<br />
+Must be used together with Sleep card to enter Nightmare Status. In Nightmare Status, the player cannot be affected by attacking cards and scroll cards. Will enter judging period during the stage when players are drawing cards after a turn. If the number of the judging card is inconsistent with the number offered by the player, the player will die immediately. Can be transferred to Illusion status by the combo of Time and Return cards.<br />
+51. Libra (Scroll card)<br />
+Can be used to enter Judger Status immediately and will not exit the status until being affected by Sleep card. In judger status, all time-delayed scroll cards will not take effect on the player except for Sleep card. Can adjust the target player of any time-delayed scroll cards. Can discard one card before entering judging period and peek the top card of the deck to decide whether to discard it or not.<br />
+52. Earthy (Three-star attacking card & three-star defending card & element card)<br />
+Can be defended by one single Tree card.<br />
+Cannot be defended by Move card.<br />
+Can cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. <br />
+Number of defending cards to dodge combo with Watery/Firey/Windy card follows the rule in the note.<br />
+**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
+

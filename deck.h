@@ -16,7 +16,6 @@ class Deck{
 private:
     std::vector<Card>     deck_of_cards;
     unsigned int          deck_size;
-    void                  perfect_shuffle();
     void                  clear();
 
 public:
@@ -37,7 +36,7 @@ public:
     void                  set_card                (unsigned int index, Card card_to_set);
     void                  merge_deck              (Deck& deck_to_merge);
     Deck                  split_deck              (unsigned int index);
-    void                  random_shuffle          ();
+    void                  perfect_shuffle();
     void                  single_shuffle          (unsigned int n);
     void                  deal_card_to            (Deck& deck_to_receive);
     void                  deal_card_to            (Deck& deck_to_receive, unsigned int index_to_deal);
