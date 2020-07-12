@@ -84,7 +84,7 @@ bool Deck::isEmpty(){
 bool Deck::search_card(Card card_to_search){
     for (auto it = 0; it < deck_size; it++){
         if (card_to_search == deck_of_cards[it])
-            return true
+            return true;
     }
     return false;
 }
