@@ -109,14 +109,14 @@ Can be used together with Return card (see *Return* below) to get the target pla
 Let target player discard 2 cards.<br />
 34. Sleep (Time-delayed scroll card)<br />
 Let target player skip his/her next turn.<br />
-Can be used together with Dream card to make the target player enter Nightmare Status (see *Dream* below) or to eliminate Judger Status.<br />
+Can be used together with Dream card to make the target player enter Nightmare Status (see *Dream* below) or to eliminate Judger Status (see *Libra* below).<br />
 35. Return (Five-star defending card)<br />
 Can be used to let target player take back his/her attacking card which cannot be used in this turn.<br />
 Can be used together with Time card (see *Return* below) to get the target player's attacking cards or to replace Nightmare Status (see *Dream* below) with status caused by Illusion card.<br />
-Can be used to get all valid scroll cards and their combos in this turn except for the combo of Freeze and Rain card.<br />
+Can be used during judging period to get judgement cards in judging area except for the combo of Freeze and Rain cards.<br />
 36. Dash (One-star defending card)<br />
 37. Create (One-star attacking card & two-star defending card & scroll card)<br />
-Can be used during player's judging period to peek the top card of the deck and decide whether to discard it or not. Cannot be used when there are players in Judger Status.<br />
+Can be used during player's judging period to peek the top card of the deck and decide whether to discard it or not. Cannot be used when there are players in Judger Status (see *Libra* below).<br />
 38. Bubbles (One-star defending card)<br />
 Cannot be used to defend Watery card.<br />
 39. Wave (Two-star defending card)<br />
