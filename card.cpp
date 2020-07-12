@@ -16,7 +16,7 @@ Card::Card(int num){
 
 void Card::display(){
 		std::cout << "#" << this -> number << " " << this -> name << std::endl;
-		std::cout << this -> instruction;
+		std::cout << this -> instruction<<std::endl;
 }
 
 void Card::operator= (Card card_to_assign){
