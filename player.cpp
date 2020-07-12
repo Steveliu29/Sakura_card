@@ -13,12 +13,14 @@
 Player::Player(){
     this -> health   = 1;
     this -> is_alive = true;
+    this -> enable_card_deal = false;
 }
 
 // Function that force to kill a player
 //
 void Player::kill_player(){
     this -> is_alive = false;
+    this -> enable_card_deal = false;
 }
 
 // Function that checks whether the player is alive or not

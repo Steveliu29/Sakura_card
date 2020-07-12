@@ -54,7 +54,7 @@ Can be used singly to defend Watery card.<br />
 Can be used together with Rain card to cause 1 damage in the next turn for the target player. No way to avoid.<br />
 13. Arrow (One-star attacking card)<br />
 Can be used together with Firey/Watery/Light card as a combo attack. This combo cannot use Mirror card to deflect (see *Mirror* below). <br />
-14. Light (Four-star attacking card & three-star defending card & element card)
+14. Light (Four-star attacking card & three-star defending card & element card)<br />
 Can cause 2 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. One less-than-three-star defending card lessens 1 damage.<br />
 Can be used together with Dark card as a combo attack. This combo causes *5* damage and *6* less-than-three-star cards are required to dodge. No Move card is allowed.(See *Move* below).<br />
 Can be deflected by Mirror (see *Mirror* below).<br />
