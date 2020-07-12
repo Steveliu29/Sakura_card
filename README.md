@@ -32,9 +32,9 @@ Number of defending cards to dodge combo with Watery/Firey/Earthy card follows t
 **Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
 2. Shadow (Two-star defending card)<br />
 Cannot be used as defending card for Light and Dark cards. <br />
-Can be used together with Dark card as scroll card to enter invisible status (See *Dark* below).<br />
+Can be used together with Dark card as scroll card to enter Invisible Status (See *Dark* below).<br />
 3. Illusion (One-star attacking card & two-star defending card & time-delayed scroll card)<br />
-If the judging card is in the range of the player's minimum and maximum cards, this player will be skipped for 1 turn.<br />
+If the judgement card is in the range of the player's minimum and maximum cards, this player will be skipped for 1 turn.<br />
 Can be used together with Maze card (see *Maze* below).<br />
 4. Flower (Scroll card)<br />
 Recover 1 hp for the player.<br />
@@ -45,7 +45,7 @@ Recover 1 hp for the player.<br />
 9. Song (Scroll card)<br />
 Recover 1 hp for the player.<br />
 10. Shot (One-star attacking card)<br />
-When the player uses defending card(s), he/she can make a combo attack of Thunder and Shot cards to another player. 2 two-star defending cards are required to dodge. Mirror card can deflect this combo (see *Mirror* below).<br />
+When the player uses defending card(s), he/she can make a combo attack of Thunder and Shot cards to another player. 2 two-star defending cards are required to dodge. Can be deflected by Mirror (see *Mirror* below).<br />
 11. Sweet (Scroll card)<br />
 Recover 1 hp for the player.<br />
 12. Freeze (Two-star defending card & time-delayed scroll card)<br />
@@ -56,7 +56,8 @@ Can be used together with Rain card to cause 1 damage in the next turn for the t
 Can be used together with Firey/Watery/Light card as a combo attack. This combo cannot use Mirror card to deflect (see *Mirror* below). <br />
 14. Light (Four-star attacking card & three-star defending card & element card)
 Can cause 2 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. One less-than-three-star defending card lessens 1 damage.<br />
-Can be used together with Dark card as a combo attack. This combo can cause *5* damage and 6 less-than-three-star cards are required to dodge. No Move card is allowed.(See *Move* below). Mirror card can be used to deflect.<br />
+Can be used together with Dark card as a combo attack. This combo causes *5* damage and *6* less-than-three-star cards are required to dodge. No Move card is allowed.(See *Move* below).<br />
+Can be deflected by Mirror (see *Mirror* below).<br />
 Can be used together with Firey card as a combo attack. Number of defending cards to dodge this combo follows the rule in the note.<br />
 15. Twin (Scroll card)<br />
 Can be used to draw 2 more cards.<br />
@@ -83,6 +84,41 @@ Can be deflected by Mirror card.<br />
 Can be used together with Sword card as a combo attack. This combo ignores all kinds of defend except for Watery+Shield combo/Time (see *Time* below)/Return (see *Return* below)/Invisible Status (see *Dark* below).<br />
 **Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
 24. Voice (Scroll card)<br />
-Can be used to eliminate effect caused by Silent card (see *Silent* below).<br />
+Can be used to invalidate Silent card (see *Silent* below).<br />
 25. Lock (Two-star defending card)<br />
 26. Cloud (Two-star attacking card & two-star defending card)<br />
+27. Dark (Four-star attacking card & three-star defending card & element card)<br />
+Can cause 2 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack. One less-than-three-star defending card lessens 1 damage.<br />
+Can be used together with Light card as a combo attack. This combo causes *5* damage and *6* less-than-three-star cards are required to dodge. No Move card is allowed.(See *Move* below).<br />
+Can be used together with Shadow card to enter Invisible Status for 3 turns. In Invisible Status, player's attacking cards can cause 1 more damage and the number of defending cards to dodge increases by 1. Less-than-three-star attacking cards cannot cause damage and the number of defending cards needed to dodge three-star or higher attacking cards decreases by 1.<br />
+28. Watery (Three-star attacking card & three-star defending card & element card)<br />
+Can cause 1 damage to the target player. Two less-than-three-star defending cards or one element card can dodge this attack.<br />
+*Note:* Can be dodged by 1 Freeze card. No Move card is allowed. Can be deflected by Mirror (see *Move* and *Mirror* below).<br />
+Can be used together with Shield card to defend all kinds of attack except for the Watery/Firey/Windy/Earthy full combo one (see explanation in *Windy*).<br />
+Number of defending cards to dodge combo with Earthy/Firey/Earthy card follows the rule in the note.<br />
+**Notice:** If a full combo of Watery/Firey/Earthy/Windy is used, the player dies immediately and there is no way to avoid.<br />
+29. Rain (Two-star attacking card)<br />
+Can be used together with Freeze card to cause 1 damage in the next turn for the target player. No way to avoid.<br />
+30. Jump (One-star defending card)<br />
+31. Silent (Time-delayed scroll card)<br />
+If the judgement card is greater than or equal to the player's minimum card, this player will be skipped for 1 turn. Can be invalidated by Voice card.<br />
+32. Time (Five-star defending card)<br />
+Can invalidate all time-delayed scroll cards.<br />
+Can be used together with Return card (see *Return* below) to get the target player's attacking cards or to replace Nightmare Status (see *Dream* below) with status caused by Illusion card.<br />
+33. Erase (Scroll card)<br />
+Let target player discard 2 cards.<br />
+34. Sleep (Time-delayed scroll card)<br />
+Let target player skip his/her next turn.<br />
+Can be used together with Dream card to make the target player enter Nightmare Status (see *Dream* below) or to eliminate Judger Status.<br />
+35. Return (Five-star defending card)<br />
+Can be used to let target player take back his/her attacking card which cannot be used in this turn.<br />
+Can be used together with Time card (see *Return* below) to get the target player's attacking cards or to replace Nightmare Status (see *Dream* below) with status caused by Illusion card.<br />
+Can be used to get all valid scroll cards and their combos in this turn except for the combo of Freeze and Rain card.<br />
+36. Dash (One-star defending card)<br />
+37. Create (One-star attacking card & two-star defending card & scroll card)<br />
+Can be used during player's judging period to peek the top card of the deck and decide whether to discard it or not. Cannot be used when there are players in Judger Status.<br />
+38. Bubbles (One-star defending card)<br />
+Cannot be used to defend Watery card.<br />
+39. Wave (Two-star defending card)<br />
+Cannot be used to defend Watery card.<br />
+Can be used singly to defend Firey card.<br />
