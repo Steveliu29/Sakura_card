@@ -46,8 +46,7 @@ public:
     void                      get_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
     void                      get_card_for_judgement            (Card card_to_add);
     void                      deal_card                         (Deck& deck_to_receive, unsigned int index_to_deal);
-    int                       find_max_ID_in_hand               ();
-    int                       find_min_ID_in_hand               ();                      
+    Card                      find_extreme_ID_in_hand           (bool max_min_switch);                      
 };
 
 #endif

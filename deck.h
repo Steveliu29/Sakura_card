@@ -24,6 +24,7 @@ public:
     void                  operator=               (Deck deck_to_assign);
     Deck                  operator+               (Deck deck_to_add);
     unsigned int          get_deck_size           ();
+    std::vector<Card>     get_all_cards_in_deck   ();
     Card                  get_card                (unsigned int index);
     bool                  isEmpty                 ();
     bool                  search_card             (Card card_to_search); // simply tell you if the card is in the deck or not

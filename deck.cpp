@@ -62,6 +62,12 @@ unsigned int Deck::get_deck_size(){
     return this -> deck_size;
 }
 
+// Getter for the Card vector in Deck
+//
+std::vector<Card> Deck::get_all_cards_in_deck(){
+    return deck_of_cards;
+}
+
 // Getter for a card in the deck
 // return the card at specific index
 //
