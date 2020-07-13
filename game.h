@@ -24,10 +24,12 @@ class Game{
 private:
     Deck draw_deck{};
     Deck discard_deck{};
+    Deck temp_deck_to_deal{};
     std::vector<Player> group_of_players;
     void merge_discard_to_draw();
     User_decision ask_for_decision();
     void player_deal_card(unsigned int player_index, std::vector<unsigned int> card_indice);
+    void check_effect();
     enum Combo combo_check(int card_amount_in_combo,std::vector <Card> card_in_combo);//return the type of the combo
 
 public:

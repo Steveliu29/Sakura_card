@@ -160,11 +160,15 @@ User_decision Game::ask_for_decision(){
 // Function that allows users to deal card
 //
 void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int> card_indice){
-    Deck temp_deck_to_deal{};
 
     for (auto it = 0; it < card_indice.size(); it++)
         group_of_players[player_index].get_card_in_hand().deal_card_to(temp_deck_to_deal,card_indice[it] - it);
 
+}
+
+// Function that checks the effect of the card in the temp_deck_to_deal
+//
+void Game::check_effect(){
     if (temp_deck_to_deal.size() > 1){
         enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
         if (Combo == Invalid)
@@ -175,10 +179,14 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
     }
 
     if (temp_deck_to_deal.size() == 1){
-        Card
+        Card single_card = temp_deck_to_deal.get_card(0);
+        // ADD SINGLE CARD EFFECT
 
     }
+
 }
+
+
 
 // The function to call a game start by setting the number of players in the game
 //
@@ -229,9 +237,10 @@ void Game::player_round_start(unsigned int player_index){
         User_decision decision = ask_for_decision();
         while (group_of_players[player_index].get_is_alive() && false == decision.end_round){
             player_deal_card(player_index, decision.card_indice_to_deal);
+            check_effect();
             decision = ask_for_decision();
         }
-
+        // Unfinished
 
 
 
