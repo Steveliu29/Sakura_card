@@ -180,15 +180,15 @@ double genrand_res53(void)
 } 
 /* These real versions are due to Isaku Wada, 2002/01/09 added */
 
-int get_cut(void)
+int get_cut(int input_min, int input_max)
 {
     if (!initialized) {
 	init_genrand(0);
 	initialized = 1;
     }
 
-    const int max = 39;
-    const int min = 13;
+    const int max = input_max-1;
+    const int min = input_min+1;
     const int spread = max - min + 1;
 
     unsigned long r = genrand_int32();
