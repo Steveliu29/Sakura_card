@@ -1,0 +1,13 @@
+#include <iostream>
+#include <vector>
+#include "card.h"
+#include "card.cpp"
+#include "deck.h"
+#include "deck.cpp"
+
+int main();
+
+int main(){
+    Deck test{};
+    return 0;
+}

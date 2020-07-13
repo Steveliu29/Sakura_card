@@ -36,7 +36,7 @@ public:
     bool                      get_enable_card_deal              ();
     void                      set_is_alive                      (bool alive_arg);
     void                      set_enable_card_deal              (bool enable_arg);
-    std::vecotr<enum Status>  get_status                        ();
+    std::vector<enum Status>  get_status                        ();
     void                      kill_player                       ();
     bool                      check_status                      (enum Status status_to_check);
     bool                      check_status                      (enum Status status_to_check, unsigned int& index_to_return);
@@ -46,6 +46,8 @@ public:
     void                      get_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
     void                      get_card_for_judgement            (Card card_to_add);
     void                      deal_card                         (Deck& deck_to_receive, unsigned int index_to_deal);
+    int                       find_max_ID_in_hand               ();
+    int                       find_min_ID_in_hand               ();                      
 };
 
 #endif

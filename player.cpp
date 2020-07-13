@@ -133,3 +133,29 @@ void Player::deal_card(Deck& deck_to_receive, unsigned int index_to_deal){
     if (enable_card_deal == true)
         card_in_hand.deal_card_to(deck_to_receive, index_to_deal);
 }
+
+// Function that return the largest ID in hand
+//
+int Player::find_max_ID_in_hand(){
+    int max = card_in_hand.get_card(0).identify();
+
+    for (auto it = 1; it < card_in_hand.get_deck_size(); it ++){
+        if (card_in_hand.get_card(it).identify() > max)
+            max = card_in_hand.get_card(it).identify();
+    }
+
+    return max;
+}
+
+// Function that return the smalleest ID in hand
+//
+int Player::find_min_ID_in_hand(){
+    int min = card_in_hand.get_card(0).identify();
+
+    for (auto it = 1; it < card_in_hand.get_deck_size(); it ++){
+        if (card_in_hand.get_card(it).identify() < min)
+            min = card_in_hand.get_card(it).identify();
+    }
+
+    return min;
+}
