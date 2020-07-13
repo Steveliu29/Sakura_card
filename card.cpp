@@ -44,13 +44,13 @@ Damage Card::deal_damage(){
 
 int Card::identify(){return this->number;}
 
-static int combo_check_unordered(std::vector<Card> card_in_combo,int card_1,int card_2){
+int combo_check_unordered(std::vector<Card> card_in_combo,int card_1,int card_2){
 	if (card_in_combo[0].identify()==card_1&&card_in_combo[1].identify()==card_2) return card_1+card_2;
 	else if (card_in_combo[0].identify()==card_2&&card_in_combo[1].identify()==card_1) return card_1+card_2;
 	else return 0;
 }
 
-static enum Combo combo_check_bigtwin(int card_to_check,int big_or_twin){
+enum Combo combo_check_bigtwin(int card_to_check,int big_or_twin){
 	enum Combo result=Invalid;
 	if (ATTACK[card_to_check]>0) result=The_Big;
 	else switch(card_to_check){
@@ -75,7 +75,7 @@ static enum Combo combo_check_bigtwin(int card_to_check,int big_or_twin){
 	return result;
 }
 
-static enum Combo combo_check_2cards(std::vector<Card> card_in_combo){
+enum Combo combo_check_2cards(std::vector<Card> card_in_combo){
 	enum Combo result=Invalid;
 	//combo except big and twin
 	if (combo_check_unordered(card_in_combo,WINDY,FIREY)==WINDY+FIREY||
@@ -129,7 +129,7 @@ enum Combo Card::combo_check(int card_amount_in_combo, std::vector<Card> card_in
 	Card this_card(this->number);
 	card_in_combo.push_back(this_card);//have all the cards to check combo ready
 	enum Combo result;
-	switch (card_amount_in_combo){
+	switch (card_in_combo.size()+1){
 		case 2: result=combo_check_2cards(card_in_combo);break;
 		case 3: 
 		case 4:	//use recursion to check the element combo
