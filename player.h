@@ -24,17 +24,28 @@ private:
     Deck card_in_hand{};
     Deck card_for_judgement{};
     bool is_alive;
-    bool enable_card_deal;
+    bool enable_card_deal; // player can only deal card with the player is enabled
     std::vector<enum Status> status;
 
 public:
     Player();
-    void kill_player();
-    bool check_alive();
-    void receive_damage(unsigned int damage);
-    void get_card(Deck& deck_to_acquire_from, unsigned int number_of_cards);
-    // The deck to receive the card to be specified, we need info about the card
-    // void deal_card(unsigned int index_to_deal);
+    int                       get_health                        ();
+    Deck                      get_card_in_hand                  ();
+    Deck                      get_card_for_judgement            ();
+    bool                      get_is_alive                      ();
+    bool                      get_enable_card_deal              ();
+    void                      set_is_alive                      (bool alive_arg);
+    void                      set_enable_card_deal              (bool enable_arg);
+    std::vecotr<enum Status>  get_status                        ();
+    void                      kill_player                       ();
+    bool                      check_status                      (enum Status status_to_check);
+    bool                      check_status                      (enum Status status_to_check, unsigned int& index_to_return);
+    void                      add_health                        (unsigned int health_to_add);
+    void                      reduce_health                     (unsigned int health_to_reduce);
+    void                      get_card_to_hand                  (Deck& deck_to_acquire_from);
+    void                      get_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
+    void                      get_card_for_judgement            (Card card_to_add);
+    void                      deal_card                         (Deck& deck_to_receive, unsigned int index_to_deal);
 };
 
 #endif
