@@ -10,6 +10,9 @@
 
 #ifndef _PLAYER_H_
 #define _PLAYER_H_
+#include "deck.h"
+#include "card.h"
+#include "card_info.h"
 
 enum Status{
     invisible,

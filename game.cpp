@@ -144,7 +144,7 @@ User_decision Game::ask_for_decision(unsigned int player_index){
 	std::cout<<"Please input the card you want to deal. Input 0 to end the input.";
 	while (input!=0){//0 for the end of the input
 		std::cin>>input;
-		if (input>group_of_players[player_index].get_deck_size()){//check whether the input is valid
+		if (input>group_of_players[player_index].get_card_in_hand().get_deck_size()){//check whether the input is valid
 			std::cout<<"Invalid card input."<<std::endl;
 			input=0;
 			valid=false;
@@ -160,7 +160,7 @@ User_decision Game::ask_for_decision(unsigned int player_index){
 		i++;
 	}
 
-	if (decision[0]==0)
+	if (decision.card_indice_to_deal[0]==0)
 		decision.end_round = true;
 	else decision.end_round = false;
 
@@ -179,6 +179,7 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
 //Function to handle the damage
 //
 Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index){//return the damage of the defender on the attacker
+	Damage result={0,0,0};
 	while (damage_to_deal.damage>0){
 		User_decision decision=this->ask_for_decision(player_index);
 		//have a new array for the defense
@@ -189,14 +190,12 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 			case WINDY: defend[ELY]=0;break;
 			case LIGHT: 
 			case DARK: defend[WINDY]=4;defend[SHADOW]=0;defend[FIREY]=4;defend[WATERY]=4;defend[EARTHY]=4;break;
-			case FIRE: defend[WOOD]=0;defend[WAVE]=3;break;
+			case FIREY: defend[WOOD]=0;defend[WAVE]=3;break;
 			case WATERY: defend[BUBBLES]=0;defend[WAVE]=0;defend[FREEZE]=3;break;
 			case EARTHY: defend[WOOD]=3;break;
 		}//switch
 		if (damage_to_deal.type==DARK) defend[GLOW]=4;
 		else defend[GLOW]=0;
-
-		Damage result={0,0,0};//return initialization
 
 		//judge whether the choice of the user can defend the attack
 		int valid_defend_card_amount=0;
@@ -205,15 +204,15 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 		for (unsigned int i=0; i<decision.card_indice_to_deal.size()&&damage_to_deal.damage>0;i++)
 			if (decision.card_indice_to_deal[i]==MOVE)//check the case for MOVE
 				if (damage_to_deal.type==WINDY||damage_to_deal.type==FIREY||
-				    damage_to_deal.type==WATERY||damage_to_deal.type==EARTHY||
-				    damage_to_deal.type==LIGHT||damage_to_deal.type==DARK)
+						damage_to_deal.type==WATERY||damage_to_deal.type==EARTHY||
+						damage_to_deal.type==LIGHT||damage_to_deal.type==DARK)
 					std::cout<<"Unable to move "<<NAME[damage_to_deal.type]<<"."<<std::endl;
 				else{//able to MOVE
 					std::cout<<"Please choose which player to move the damage to:"<<std::endl;
 					unsigned int new_index=this->group_of_players.size();
 					std::cin>>new_index;
 					new_index--;
-					while (new_index>=this->group_of_players.size()||!(group_of_player[new_index].get_is_alive())){
+					while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
 						std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
 						std::cin>>new_index;
 					}//while
@@ -223,7 +222,7 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 				}//else
 			else if (decision.card_indice_to_deal[i]==MIRROR){//check the case for MIRROR
 				if (damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
-				    damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT){//success
+						damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT){//success
 					result=damage_to_deal;
 					damage_to_deal.damage=0;
 					std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
@@ -237,32 +236,33 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 				valid_defend+=defend[decision.card_indice_to_deal[i]];
 				valid_defend_card_amount++;
 			}
-		
+
 		//defend checking
 		//special correction for Thunder_Shot
 		if (damage_to_deal.type==THUNDER&&damage_to_deal.star==4)
 			if (valid_defend<4){
 				valid_defend_card_amount=1;
 				damage_to_deal.star=5;//ensure that one one-star defend card cannot reduce any damamge
+			}
 
-		damage_to_deal.star-=valid_defense;
+		damage_to_deal.star-=valid_defend;
 		if (valid_defend_card_amount>=2||damage_to_deal.damage<=0){//successfully defend
 			std::cout<<"Defend successfully!"<<std::endl;
 			damage_to_deal.damage=0;
 			//check for Thunder_Shot combo
 			Card tmp_card_1(THUNDER);
 			Card tmp_card_2(SHOT);
-			if (group_of_player[player_index].get_card_in_hand().search_card(tmp_card_1)&&group_of_player[player_index].get_card_in_hand().search_card(tmp_card_2)){
+			if (group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1)&&group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2)){
 				std::cout<<"Do you want to use the THUNDER SHOT combo?"<<std::endl;
 				std::string choice;
 				std::cin>>choice;
 				if (choice=="yes"||choice=="YES"||choice=="Yes"||choice=="Y"||choice=="y"){
 					//deal THUNDER and SHOT to the discard deck
 					unsigned int tmp_index;
-					group_of_player[player_index].get_card_in_hand().search_card(tmp_card_1,tmp_index);
-					group_of_player[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
-					group_of_player[player_index].get_card_in_hand().search_card(tmp_card_2,tmp_index);
-					group_of_player[player_index].get_card_in_hand().search_card(this->discard_deck,tmp_index);
+					group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1,tmp_index);
+					group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
+					group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2,tmp_index);
+					group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
 					//assign value to the return result
 					result.damage=2;
 					result.type=THUNDER;
@@ -273,7 +273,7 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 		else{//if fail
 			if (damage_to_deal.star<=3) damage_to_deal.damage=1;
 			std::cout<<"You are damaged by "<<damage_to_deal.damage<<"."<<std::endl;
-			group_of_player[player_index].reduce_health((unsigned int)damage_to_deal.damage);
+			group_of_players[player_index].reduce_health((unsigned int)damage_to_deal.damage);
 			damage_to_deal.damage=0;
 		}
 
@@ -283,128 +283,109 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 
 // Function that checks the effect of the card in the temp_deck_to_deal
 //
-void Game::check_effect(){
-	if (temp_deck_to_deal.size() > 1){
-		enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
-		if (tempo_combo == Invalid){
-			group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
-			std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
-			else if (tempo_combo == Double_Element){
+/*
+   void Game::check_effect(){
+   if (temp_deck_to_deal.size() > 1){
+   enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
+   if (tempo_combo == Invalid){
+   group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
+   std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
+   else if (tempo_combo == Double_Element){
 
-			}
-			// ADD COMBO EFFECT
-		}else if (temp_deck_to_deal.size() == 1){
-			Card single_card = temp_deck_to_deal.get_card(0);
-			// ADD SINGLE CARD EFFECT
-		}else std::cout<<"Please choose a card to deal."<<std::endl;
+   }
+// ADD COMBO EFFECT
+}else if (temp_deck_to_deal.size() == 1){
+Card single_card = temp_deck_to_deal.get_card(0);
+// ADD SINGLE CARD EFFECT
+}else std::cout<<"Please choose a card to deal."<<std::endl;
 
+}
+}
+*/
+
+// The function to call a game start by setting the number of players in the game
+//
+void Game::game_start(unsigned int number_of_players){
+	Player temp{};
+
+	for (auto it = 0 ; it < number_of_players ; it++)
+		group_of_players.emplace_back(temp);
+
+	unsigned int rand_num =  get_cut(10,draw_deck.get_deck_size()) % 51;
+	for (auto it = 0; it < rand_num ; it ++){
+		unsigned int shuffle_index = get_cut(0,draw_deck.get_deck_size()) % 51;
+		draw_deck.single_shuffle(shuffle_index);
 	}
+}
 
-
-
-	// The function to call a game start by setting the number of players in the game
-	//
-	void Game::game_start(unsigned int number_of_players){
-		Player temp{};
-
-		for (auto it = 0 ; it < number_of_players ; it++)
-			group_of_players.emplace_back(temp);
-
-		unsigned int rand_num =  get_cut(10,draw_deck.get_deck_size()) % 51;
-		for (auto it = 0; it < rand_num ; it ++){
-			unsigned int shuffle_index = get_cut(0,draw_deck.get_deck_size()) % 51;
-			draw_deck.single_shuffle(shuffle_index);
-		}
-	}
-
-	// Function to let a single player draw card to its hand
-	//
-	void Game::single_player_draw_card(unsigned int player_index, unsigned int number_of_cards){
-		if (player_index < group_of_players.size()){
-
-<<<<<<< HEAD
-			// Player draws cards to hand
-			for (auto it = 0; it < number_of_cards; it++){
-				if (0 == draw_deck.get_deck_size()){
-					this -> merge_discard_to_draw();
-				}
-=======
 // Function to let a single player draw card to its hand
 //
 void Game::single_player_draw_card(unsigned int player_index, unsigned int number_of_cards){
-    if (player_index < group_of_players.size()){
+	if (player_index < group_of_players.size()){
 
-        // Player draws cards to hand
-        for (auto it = 0; it < number_of_cards; it++){
-            if (0 == draw_deck.get_deck_size()){
-                this -> merge_discard_to_draw();
-            }
+		// Player draws cards to hand
+		for (auto it = 0; it < number_of_cards; it++){
+			if (0 == draw_deck.get_deck_size()){
+				this -> merge_discard_to_draw();
+			}
 
-            group_of_players[player_index].add_card_to_hand(draw_deck);
-        }
-    }
+			group_of_players[player_index].add_card_to_hand(draw_deck);
+		}
+	}
 }
->>>>>>> 243b7053c1d99d2475e31d2b406f4648f3942a4d
 
-				group_of_players[player_index].get_card_to_hand(draw_deck);
-			}
-		}
+// Function that let all players draw 5 card at the end of all players' rounds
+//
+void Game::all_player_draw_card(){
+	for (auto it = 0; it < group_of_players.size(); it++){
+		int diff = 5 - group_of_players[it].get_card_in_hand().get_deck_size();
+		this -> single_player_draw_card(it,diff);
 	}
+}
 
-	// Function that let all players draw 5 card at the end of all players' rounds
-	//
-	void Game::all_player_draw_card(){
-		for (auto it = 0; it < group_of_players.size(); it++){
-			int diff = 5 - group_of_players[it].get_card_in_hand().get_deck_size();
-			this -> single_player_draw_card(it,diff);
+// The function that starts the player's round
+//
+void Game::player_round_start(unsigned int player_index){
+	if (player_index < group_of_players.size() && group_of_players[player_index].get_is_alive()){
+		group_of_players[player_index].set_enable_card_deal(true);
+
+		User_decision decision = ask_for_decision(player_index);
+		while (group_of_players[player_index].get_is_alive() && false == decision.end_round){
+			player_deal_card(player_index, decision.card_indice_to_deal);
+			check_effect();
+			decision = ask_for_decision(player_index);
 		}
+		// Unfinished
+
+
+
 	}
-
-	// The function that starts the player's round
-	//
-	void Game::player_round_start(unsigned int player_index){
-		if (player_index < group_of_players.size() && group_of_players[player_index].get_is_alive()){
-			group_of_players[player_index].set_enable_card_deal(true);
-
-			User_decision decision = ask_for_decision();
-			while (group_of_players[player_index].get_is_alive() && false == decision.end_round){
-				player_deal_card(player_index, decision.card_indice_to_deal);
-				check_effect();
-				decision = ask_for_decision();
-			}
-			// Unfinished
+}
 
 
+// ***********************************************************************************************
 
-		}
+
+enum Combo Game::combo_check(int card_amount_in_combo, std::vector<Card> card_in_combo){
+	enum Combo result;
+	switch (card_amount_in_combo){
+		case 2: result=combo_check_2cards(card_in_combo);break;
+		case 3:
+		case 4:	//use recursion to check the element combo
+			switch (card_in_combo[card_amount_in_combo-1].identify()){
+				case WINDY:
+				case FIREY:
+				case WATERY:
+				case EARTHY: result=combo_check(card_amount_in_combo-1,card_in_combo);
+					     if (result!=Invalid) //determine the final result for combo
+						     if(card_amount_in_combo==3)
+							     result=Triple_Element;
+						     else result=Quadra_Element;
+					     break;
+					     //no combo is valid without an element card
+				default: result=Invalid;break;
+			}break;
+		default: result=Invalid;break;//no combo is valid with more than 4 cards
 	}
-
-
-	// ***********************************************************************************************
-
-
-	enum Combo Game::combo_check(int card_amount_in_combo, std::vector<Card> card_in_combo){
-		Card this_card(this->number);
-		card_in_combo.push_back(this_card);//have all the cards to check combo ready
-		enum Combo result;
-		switch (card_amount_in_combo){
-			case 2: result=combo_check_2cards(card_in_combo);break;
-			case 3:
-			case 4:	//use recursion to check the element combo
-				switch (card_in_combo[card_amount_in_combo-1].identify()){
-					case WINDY:
-					case FIREY:
-					case WATERY:
-					case EARTHY: result=combo_check(card_amount_in_combo-1,card_in_combo);
-						     if (result!=Invalid) //determine the final result for combo
-							     if(card_amount_in_combo==3)
-								     result=Triple_Element;
-							     else result=Quadra_Element;
-						     break;
-						     //no combo is valid without an element card
-					default: result=Invalid;break;
-				}break;
-			default: result=Invalid;break;//no combo is valid with more than 4 cards
-		}
-		return result;
-	}
+	return result;
+}

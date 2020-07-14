@@ -13,6 +13,9 @@
 
 #include <string>
 #include "card.h"
+#include "deck.h"
+#include "player.h"
+#include <iostream>
 
 struct User_decision{
     std::vector<unsigned int> card_indice_to_deal;
@@ -35,7 +38,7 @@ private:
 public:
     Game();
     void game_start(unsigned int number_of_players);
-    void single_player_draw_card(unsigned int player_index, unsigned int number_of_cards)
+    void single_player_draw_card(unsigned int player_index, unsigned int number_of_cards);
     void all_player_draw_card(); // draw to 5 cards at the end of all players' rounds
     void player_round_start(unsigned int player_index);
 

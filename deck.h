@@ -11,6 +11,8 @@
 #ifndef _DECK_H_
 #define _DECK_H_
 #include "rand.h"
+#include "card.h"
+#include <iostream>
 
 class Deck{
 private:

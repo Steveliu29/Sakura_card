@@ -1,6 +1,6 @@
 #ifndef _CARD_INFO_H_
 #define _CARD_INFO_H_
-const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float","Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Tree","Shield","Power","Loop","Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent","Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword","Glow","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
+const std::string NAME[52]={"Windy","Shadow","Illusion","Flower","Mist","Storm","Float","Fight","Song","Shot","Sweet","Freeze","Arrow","Light","Twin","Wood","Shield","Power","Loop","Mirror","Big","Change","Firey","Voice","Lock","Cloud","Dark","Watery","Rain","Jump","Silent","Time","Erase","Sleep","Return","Dash","Create","Bubbles","Wave","Sand","Ely","Thunder","Sword","Glow","Move","Little","Maze","Snowy","Through","Dream","Libra","Earthy"};
 
 const std::string 
 INS[52]={
@@ -73,7 +73,7 @@ const int FREEZE=11;
 const int ARROW=12;
 const int LIGHT=13;
 const int TWIN=14;
-const int TREE=15;
+const int WOOD=15;
 const int SHIELD=16;
 const int POWER=17;
 const int LOOP=18;

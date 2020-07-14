@@ -26,8 +26,14 @@ public:
 	bool operator == (Card card_to_compare); 
 	Damage deal_damage();
 	int identify();
-	enum Combo combo_check(int card_amount_in_combo;std::vector <Card> card_in_combo);//return the type of the combo
+	enum Combo combo_check(int card_amount_in_combo,std::vector <Card> card_in_combo);//return the type of the combo
 };
+
+int combo_check_unordered(std::vector<Card> card_in_combo,int card_1,int card_2);
+
+enum Combo combo_check_bigtwin(int card_to_check,int big_or_twin);
+
+enum Combo combo_check_2cards(std::vector<Card> card_in_combo);
 /*
 class Windy:public Card{
 public:
