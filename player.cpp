@@ -15,7 +15,7 @@
 Player::Player(){
     this -> health   = 1;
     this -> is_alive = true;
-    this -> get_enable_card_deal = false;
+    this -> enable_card_deal = false;
 }
 
 // Getter for the health
@@ -70,7 +70,7 @@ std::vector<enum Status> Player::get_status(){
 //
 void Player::kill_player(){
     this -> is_alive = false;
-    this -> get_enable_card_deal = false;
+    this -> enable_card_deal = false;
 }
 
 // Function that checks if player has the status provided
@@ -87,7 +87,7 @@ bool Player::check_status(enum Status status_to_check){
 // Overloaded function that checks if player has the status provided
 // If the status is there, the index in the vector will also be returned
 //
-bool Player::check_status(enum Status status_to_check, unsinged int& index_to_return){
+bool Player::check_status(enum Status status_to_check, unsigned int& index_to_return){
     for (auto it = 0; it < status.size(); it ++){
         if (status[it] == status_to_check){
             index_to_return = it;
