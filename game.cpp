@@ -176,6 +176,39 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
 
 }
 
+//Player "dying" ask for a health recover from player "save"
+void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
+	Card tmp_card(card_index);
+	unsigned int tmp_index;
+	if (group_of_players[i].get_card_in_hand().search_card(tmp_card,tmp_index)){
+		std::cout<<"Do you want to use "<<NAME[card_index]<<" to save player "<<dying+1<<"?"<<std::endl;
+		std::string choice;
+		std::cin>>choice;
+		if (choice=="yes"||choice=="Yes"||choice=="YES"||choice=="y"||choice=="Y"){
+			group_of_players[player_index].add_health(1);
+			group_of_players[i].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
+		}
+	}
+}
+
+//Function to handle the dying status
+//
+void Game::death_settlement(unsigned int player_index){
+	for (unsigned int i; i<this->group_of_players.size()&&group_of_player[player_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
+		if (group_of_player[player_index].get_health()<1)
+			this->ask_for_health(player_index,i,FLOWER);
+		else break;
+		if (group_of_player[player_index].get_health()<1)
+			this->ask_for_health(player_index,i,SONG);
+		else break;
+		if (group_of_player[player_index].get_health()<1)
+			this->ask_for_health(player_index,i,SWEET);
+		else break;
+	}
+	//kill the player if no FLOWER or SONG or SWEET is dealt
+	if (group_of_player[player_index].get_health()<1) group_of_player[player_index].kill_player();
+}
+
 //Function to handle the damage
 //
 Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index){//return the damage of the defender on the attacker
@@ -238,6 +271,7 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 			}
 
 		//defend checking
+		int VALID_AMOUNT=2;
 		//special correction for Thunder_Shot
 		if (damage_to_deal.type==THUNDER&&damage_to_deal.star==4)
 			if (valid_defend<4){
@@ -245,8 +279,14 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 				damage_to_deal.star=5;//ensure that one one-star defend card cannot reduce any damamge
 			}
 
+		switch (damage_to_deal.star){
+			case 5: VALID_AMOUNT=5;
+			case 6: VALID_AMOUNT=6;
+			case 7: VALID_AMOUNT=8;
+		}
+
 		damage_to_deal.star-=valid_defend;
-		if (valid_defend_card_amount>=2||damage_to_deal.damage<=0){//successfully defend
+		if (valid_defend_card_amount>=VALID_AMOUNT||damage_to_deal.star<=0){//successfully defend
 			std::cout<<"Defend successfully!"<<std::endl;
 			damage_to_deal.damage=0;
 			//check for Thunder_Shot combo
@@ -274,6 +314,8 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 			if (damage_to_deal.star<=3) damage_to_deal.damage=1;
 			std::cout<<"You are damaged by "<<damage_to_deal.damage<<"."<<std::endl;
 			group_of_players[player_index].reduce_health((unsigned int)damage_to_deal.damage);
+			if (group_of_players[player_index].get_health()<=0)
+				this->death_settlement(player_index);
 			damage_to_deal.damage=0;
 		}
 
@@ -283,25 +325,23 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 
 // Function that checks the effect of the card in the temp_deck_to_deal
 //
-/*
-   void Game::check_effect(){
-   if (temp_deck_to_deal.size() > 1){
-   enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
-   if (tempo_combo == Invalid){
-   group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
-   std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
-   else if (tempo_combo == Double_Element){
 
-   }
-// ADD COMBO EFFECT
-}else if (temp_deck_to_deal.size() == 1){
-Card single_card = temp_deck_to_deal.get_card(0);
-// ADD SINGLE CARD EFFECT
-}else std::cout<<"Please choose a card to deal."<<std::endl;
+void Game::check_effect(){
+	if (temp_deck_to_deal.size() > 1){
+		enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
+		if (tempo_combo == Invalid){
+			group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
+			std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
+			else if (tempo_combo == Double_Element){
+			}
+		// ADD COMBO EFFECT
+		}else if (temp_deck_to_deal.size() == 1){
+		Card single_card = temp_deck_to_deal.get_card(0);
+		// ADD SINGLE CARD EFFECT
+		}else std::cout<<"Please choose a card to deal."<<std::endl;
+	}
+}
 
-}
-}
-*/
 
 // The function to call a game start by setting the number of players in the game
 //
