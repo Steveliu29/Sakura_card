@@ -209,11 +209,18 @@ void Game::death_settlement(unsigned int player_index){
 	if (group_of_player[player_index].get_health()<1) group_of_player[player_index].kill_player();
 }
 
+//Function to find element in a vector
+static bool find_vector(std::vector<int>vector_to_search,int element){
+	for(std::vector<int>::iterator it = vector_to_search.begin(); it != vector_to_search.end(); ++it)
+		if (*it==element) return true;
+	return false;
+}
+
+
 //Function to handle the damage
 //
-Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index){//return the damage of the defender on the attacker
-	Damage result={0,0,0};
-	while (damage_to_deal.damage>0){
+bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,unsigned int damage_source_index){//return whether the attacking card is RETURNED
+	bool if_returned=false;
 		User_decision decision=this->ask_for_decision(player_index);
 		//have a new array for the defense
 		int defend[52];
@@ -234,37 +241,42 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 		int valid_defend_card_amount=0;
 		int valid_defend=0;
 		//collect the defend cards
-		for (unsigned int i=0; i<decision.card_indice_to_deal.size()&&damage_to_deal.damage>0;i++)
-			if (decision.card_indice_to_deal[i]==MOVE)//check the case for MOVE
-				if (damage_to_deal.type==WINDY||damage_to_deal.type==FIREY||
-						damage_to_deal.type==WATERY||damage_to_deal.type==EARTHY||
-						damage_to_deal.type==LIGHT||damage_to_deal.type==DARK)
-					std::cout<<"Unable to move "<<NAME[damage_to_deal.type]<<"."<<std::endl;
-				else{//able to MOVE
-					std::cout<<"Please choose which player to move the damage to:"<<std::endl;
-					unsigned int new_index=this->group_of_players.size();
-					std::cin>>new_index;
-					new_index--;
-					while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
-						std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
-						std::cin>>new_index;
-					}//while
-					std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
-					damage_to_deal=this->damage_settlement(damage_to_deal,new_index);
-					break;
-				}//else
-			else if (decision.card_indice_to_deal[i]==MIRROR){//check the case for MIRROR
+		//First check for Time_Return, Second check for Return, Third check for Time
+		//Fourth check for Little, Fifth check for Move, Sixth check for Mirror, Last check for common defending cards
+		if (find_vector(decision.card_indice_to_deal,RETURN)&&find_vector(decision.card_indice_to_deal,TIME)){//first check
+			damamge_to_deal=result;
+			//take all the cards into hand
+			this->group_of_players[player_index].get_card_in_hand.merge(this->temp_deck_to_deal);
+		}else if (find_vector(decision.card_indice_to_deal,RETURN){//second check
+			damage_to_deal=result;
+			if_returned=true;
+		}else if (find_vector(decision.card_indice_to_deal,TIME)){//third check
+			damage_to_deal=result;
+		}else if (find_vector(decision.card_indice_to_deal,LITTLE)){//fourth check
+			damage_to_deal.star-=2;
+			valid_defend_card_amount=1;
+		}else if (find_vector(decision.card_indice_to_deal,MOVE)&&damage_to_deal.star<=2){//fifth check
+                        std::cout<<"Please choose which player to move the damage to:"<<std::endl;
+                        unsigned int new_index=this->group_of_players.size();
+                        std::cin>>new_index;
+                        new_index--;
+                        while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
+				
+                                std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
+                                std::cin>>new_index;
+                        }//while
+                                std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
+                                if_returned=this->damage_settlement(damage_to_deal,new_index,player_index);
+		}else{//sixth check
+			if (find_vector(decision.card_indice_to_deal, MOVE)) std::cout<<"Unable to move "<<NAME[damage_to_deal]<<"."<<std::endl;
+			if (find_vector(decision.card_indice_to_deal,MIRROR)){
 				if (damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
-						damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT){//success
-					result=damage_to_deal;
-					damage_to_deal.damage=0;
-					std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
-					break;
-				}else std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
-			}else if (decision.card_indice_to_deal[i]==LITTLE){//check the case for LITTLE
-				valid_defend=2;
-				valid_defend_card_amount=1;
-				break;
+                                    damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT){//success
+                                        std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
+                                        if_return=this->damage_settlement(damage_to_deal,damage_source_index,player_index)
+                                }else std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
+			}
+
 			}else if (defend[decision.card_indice_to_deal[i]]>0){//common defend cards
 				valid_defend+=defend[decision.card_indice_to_deal[i]];
 				valid_defend_card_amount++;
@@ -279,11 +291,11 @@ Damage Game::damage_settlement(Damage damage_to_deal, unsigned int player_index)
 				damage_to_deal.star=5;//ensure that one one-star defend card cannot reduce any damamge
 			}
 
-		switch (damage_to_deal.star){
+/*		switch (damage_to_deal.star){
 			case 5: VALID_AMOUNT=5;
 			case 6: VALID_AMOUNT=6;
 			case 7: VALID_AMOUNT=8;
-		}
+		}*/
 
 		damage_to_deal.star-=valid_defend;
 		if (valid_defend_card_amount>=VALID_AMOUNT||damage_to_deal.star<=0){//successfully defend
