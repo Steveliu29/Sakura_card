@@ -275,3 +275,14 @@ void Deck::deal_card_to (Deck& deck_to_receive, unsigned int index_to_deal){
         this -> remove_card(index_to_deal);
     }
 }
+
+// Function that displays the entire deck of card
+//
+void Deck::display(){
+    std::cout << "Cards In Hand:" << std::endl;
+
+    for (auto it = 0; it < deck_size; it++){
+        std::cout << it + 1 << ". ";
+        std::cout << NAME[deck_of_cards[it].identify()] << std::endl;
+    }
+}
