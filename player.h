@@ -38,15 +38,17 @@ public:
     void                      set_enable_card_deal              (bool enable_arg);
     std::vector<enum Status>  get_status                        ();
     void                      kill_player                       ();
+    void                      add_status                        (enum Status status_to_add);
+    void                      remove_status                     (enum Status status_to_remove);
     bool                      check_status                      (enum Status status_to_check);
     bool                      check_status                      (enum Status status_to_check, unsigned int& index_to_return);
     void                      add_health                        (unsigned int health_to_add);
     void                      reduce_health                     (unsigned int health_to_reduce);
-    void                      get_card_to_hand                  (Deck& deck_to_acquire_from);
-    void                      get_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
-    void                      get_card_for_judgement            (Card card_to_add);
+    void                      add_card_to_hand                  (Deck& deck_to_acquire_from);
+    void                      add_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
+    void                      add_card_for_judgement            (Card card_to_add);
     void                      deal_card                         (Deck& deck_to_receive, unsigned int index_to_deal);
-    Card                      find_extreme_ID_in_hand           (bool max_min_switch);                      
+    Card                      find_extreme_ID_in_hand           (bool max_min_switch);
 };
 
 #endif

@@ -41,5 +41,6 @@ public:
     void                  single_shuffle          (unsigned int n);
     void                  deal_card_to            (Deck& deck_to_receive);
     void                  deal_card_to            (Deck& deck_to_receive, unsigned int index_to_deal);
+    void                  display                 ();
 };
 #endif

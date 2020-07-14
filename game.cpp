@@ -322,11 +322,29 @@ void Game::check_effect(){
 	void Game::single_player_draw_card(unsigned int player_index, unsigned int number_of_cards){
 		if (player_index < group_of_players.size()){
 
+<<<<<<< HEAD
 			// Player draws cards to hand
 			for (auto it = 0; it < number_of_cards; it++){
 				if (0 == draw_deck.get_deck_size()){
 					this -> merge_discard_to_draw();
 				}
+=======
+// Function to let a single player draw card to its hand
+//
+void Game::single_player_draw_card(unsigned int player_index, unsigned int number_of_cards){
+    if (player_index < group_of_players.size()){
+
+        // Player draws cards to hand
+        for (auto it = 0; it < number_of_cards; it++){
+            if (0 == draw_deck.get_deck_size()){
+                this -> merge_discard_to_draw();
+            }
+
+            group_of_players[player_index].add_card_to_hand(draw_deck);
+        }
+    }
+}
+>>>>>>> 243b7053c1d99d2475e31d2b406f4648f3942a4d
 
 				group_of_players[player_index].get_card_to_hand(draw_deck);
 			}
