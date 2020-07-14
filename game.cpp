@@ -352,7 +352,7 @@ void Game::player_round_start(unsigned int player_index){
 		User_decision decision = ask_for_decision(player_index);
 		while (group_of_players[player_index].get_is_alive() && false == decision.end_round){
 			player_deal_card(player_index, decision.card_indice_to_deal);
-			check_effect();
+			//check_effect();
 			decision = ask_for_decision(player_index);
 		}
 		// Unfinished
