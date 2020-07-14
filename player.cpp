@@ -82,13 +82,9 @@ void Player::add_status(enum Status status_to_add){
 // Function that remove a status from the plater
 //
 void Player::remove_status(enum Status status_to_remove){
-    bool is_found = false;
-    for (auto it = 0; it < status.size() && !is_found; it ++){
-        if (status[it] == status_to_remove){
-            status.erase(status.begin() + it);
-            is_found = true;
-        }
-    }
+    unsigned int index_to_remove{};
+    if (check_status(status_to_remove,index_to_remove))
+            status.erase(status.begin() + index_to_remove);
 }
 
 // Function that checks if player has the status provided
