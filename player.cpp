@@ -73,6 +73,18 @@ void Player::kill_player(){
     this -> enable_card_deal = false;
 }
 
+// Function that add a status to the player
+//
+void Player::add_status(enum Status status_to_add){
+    status.emplace_back(status_to_add);
+}
+
+// Function that remove a status from the plater
+//
+void Player::remove_status(enum Status status_to_remove){
+    status.erase(status.find(status_to_remove));
+}
+
 // Function that checks if player has the status provided
 //
 bool Player::check_status(enum Status status_to_check){
