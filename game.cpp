@@ -209,7 +209,7 @@ void Game::single_player_draw_card(unsigned int player_index, unsigned int numbe
     if (player_index < group_of_players.size()){
 
         // Player draws cards to hand
-        for （auto it = 0; it < number_of_cards; it++){
+        for (auto it = 0; it < number_of_cards; it++){
             if (0 == draw_deck.get_deck_size()){
                 this -> merge_discard_to_draw();
             }
