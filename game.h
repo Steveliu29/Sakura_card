@@ -12,8 +12,7 @@
 #define _GAME_H_
 
 #include <string>
-
-enum Combo {Invalid,Double_Element,Element_Arrow,Element_Sword,Freezing_Rain,Invisible,Light_Dark,Maze_Illusion,Maze_Lord,Nightmare,Powerful_Light,Quadra_Element,The_Big,The_Twin,Thunder_Shot,Time_Return,Triple_Element,Water_Shield};
+#include "card.h"
 
 struct User_decision{
     std::vector<unsigned int> card_indice_to_deal;
@@ -29,6 +28,7 @@ private:
     void merge_discard_to_draw();
     User_decision ask_for_decision();
     void player_deal_card(unsigned int player_index, std::vector<unsigned int> card_indice);
+    void damage_settlement(Damage damage_to_deal);
     void check_effect();
     enum Combo combo_check(int card_amount_in_combo,std::vector <Card> card_in_combo);//return the type of the combo
 

@@ -135,24 +135,34 @@ void Game::merge_discard_to_draw(){
 // Function that input users decision
 // A struct User_decision is returned
 //
-User_decision Game::ask_for_decision(){
+User_decision Game::ask_for_decision(unsigned int index){
     User_decision decision{};
-    std::string user_input;
+    std::vector<unsigned int> user_input;
 
-    std::cin >> user_input;
-
-    if (user_input.find("end") != std::npos){
-
-        std::size_t next_input = user_input.find(" ");
-        while (next_input != std::npos){
-            temp = std::stoi(user_input.substr(0, next_input));
-            decision.card_indice_to_deal.emplace_back(temp);
-            next_input = user_input.find(" ");
-        }
-
+    int input=1;
+    bool valid=true;
+    std::cout<<"Please input the card you want to deal. Input 0 to end the input.";
+    while (input!=0){//0 for the end of the input
+	    std::cin>>input;
+	    if (input>group_of_players[index].get_deck_size()){//check whether the input is valid
+		    std::cout<<"Invalid card input."<<std::endl;
+		    input=0;
+		    valid=false;
+	    }
+	    user_input.push_back(input);
     }
-    else
-        decision.end_round = true;
+    if (!valid) decision=this->ask_for_decision(index);//ask for another input if this is invalid
+
+    //assign value to return
+    int i=0;
+    while (user_input[i]!=0){
+	    decision.card_indice_to_deal.push_back(group_of_players[index].get_card_in_hand.get_card(user_input[i]).identify());
+	    i++;
+    }
+
+    if (decision[0]==0)
+	    decision.end_round = true;
+    else decision.end_round=false;
 
     return decision;
 }
@@ -166,23 +176,28 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
 
 }
 
+//Function to handle the damage
+//
+bool Game::damage_settlement(Damage damage_to_deal, int player_index){//bool to check for Thunder_Shot
+	while
+}
+
 // Function that checks the effect of the card in the temp_deck_to_deal
 //
 void Game::check_effect(){
     if (temp_deck_to_deal.size() > 1){
         enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
-        if (Combo == Invalid)
+        if (tempo_combo == Invalid){
             group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
+	    cout<<"Invalid combo. Please check your card selection."<<endl;
+	else if (tempo_combo == Double_Element){
 
-        else
+	}
         // ADD COMBO EFFECT
-    }
-
-    if (temp_deck_to_deal.size() == 1){
+    }else if (temp_deck_to_deal.size() == 1){
         Card single_card = temp_deck_to_deal.get_card(0);
         // ADD SINGLE CARD EFFECT
-
-    }
+    }else std::cout<<"Please choose a card to deal."<<endl;
 
 }
 
