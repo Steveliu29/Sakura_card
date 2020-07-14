@@ -44,9 +44,9 @@ public:
     bool                      check_status                      (enum Status status_to_check, unsigned int& index_to_return);
     void                      add_health                        (unsigned int health_to_add);
     void                      reduce_health                     (unsigned int health_to_reduce);
-    void                      get_card_to_hand                  (Deck& deck_to_acquire_from);
-    void                      get_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
-    void                      get_card_for_judgement            (Card card_to_add);
+    void                      add_card_to_hand                  (Deck& deck_to_acquire_from);
+    void                      add_card_to_hand                  (Deck& deck_to_acquire_from, unsigned int index_to_get);
+    void                      add_card_for_judgement            (Card card_to_add);
     void                      deal_card                         (Deck& deck_to_receive, unsigned int index_to_deal);
     Card                      find_extreme_ID_in_hand           (bool max_min_switch);
 };

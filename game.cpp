@@ -229,7 +229,7 @@ void Game::single_player_draw_card(unsigned int player_index, unsigned int numbe
                 this -> merge_discard_to_draw();
             }
 
-            group_of_players[player_index].get_card_to_hand(draw_deck);
+            group_of_players[player_index].add_card_to_hand(draw_deck);
         }
     }
 }

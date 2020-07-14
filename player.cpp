@@ -82,7 +82,13 @@ void Player::add_status(enum Status status_to_add){
 // Function that remove a status from the plater
 //
 void Player::remove_status(enum Status status_to_remove){
-    status.erase(status.find(status_to_remove));
+    bool is_found = false;
+    for (auto it = 0; it < status.size() && !is_found; it ++){
+        if (status[it] == status_to_remove){
+            status.erase(status.begin() + it);
+            is_found = true;
+        }
+    }
 }
 
 // Function that checks if player has the status provided
@@ -124,20 +130,20 @@ void Player::reduce_health(unsigned int health_to_reduce){
 
 // Function that get the player a card to hand from other deck
 //
-void Player::get_card_to_hand(Deck& deck_to_acquire_from){
+void Player::add_card_to_hand(Deck& deck_to_acquire_from){
     deck_to_acquire_from.deal_card_to(card_in_hand);
 }
 
 // Overloaded function that get player a card to hand from other deck with dealing index being specified
 //
-void Player::get_card_to_hand(Deck& deck_to_acquire_from, unsigned int index_to_get){
+void Player::add_card_to_hand(Deck& deck_to_acquire_from, unsigned int index_to_get){
     deck_to_acquire_from.deal_card_to(card_in_hand, index_to_get);
 }
 
 // Function that add a card to judgement zone
 // When adding the card to the judgement zone, DO NOT forget remove the original judgement card from other deck
 //
-void Player::get_card_for_judgement(Card card_to_add){
+void Player::add_card_for_judgement(Card card_to_add){
     card_for_judgement.add_card(card_to_add);
 }
 
