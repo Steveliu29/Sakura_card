@@ -180,13 +180,13 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
 void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 	Card tmp_card(card_index);
 	unsigned int tmp_index;
-	if (group_of_players[i].get_card_in_hand().search_card(tmp_card,tmp_index)){
+	if (group_of_players[save].get_card_in_hand().search_card(tmp_card,tmp_index)){
 		std::cout<<"Do you want to use "<<NAME[card_index]<<" to save player "<<dying+1<<"?"<<std::endl;
 		std::string choice;
 		std::cin>>choice;
 		if (choice=="yes"||choice=="Yes"||choice=="YES"||choice=="y"||choice=="Y"){
-			group_of_players[player_index].add_health(1);
-			group_of_players[i].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
+			group_of_players[dying].add_health(1);
+			group_of_players[save].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
 		}
 	}
 }
@@ -194,24 +194,24 @@ void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 //Function to handle the dying status
 //
 void Game::death_settlement(unsigned int player_index){
-	for (unsigned int i; i<this->group_of_players.size()&&group_of_player[player_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
-		if (group_of_player[player_index].get_health()<1)
+	for (unsigned int i; i<this->group_of_players.size()&&group_of_players[player_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
+		if (group_of_players[player_index].get_health()<1)
 			this->ask_for_health(player_index,i,FLOWER);
 		else break;
-		if (group_of_player[player_index].get_health()<1)
+		if (group_of_players[player_index].get_health()<1)
 			this->ask_for_health(player_index,i,SONG);
 		else break;
-		if (group_of_player[player_index].get_health()<1)
+		if (group_of_players[player_index].get_health()<1)
 			this->ask_for_health(player_index,i,SWEET);
 		else break;
 	}
 	//kill the player if no FLOWER or SONG or SWEET is dealt
-	if (group_of_player[player_index].get_health()<1) group_of_player[player_index].kill_player();
+	if (group_of_players[player_index].get_health()<1) group_of_players[player_index].kill_player();
 }
 
 //Function to find element in a vector
-static bool find_vector(std::vector<int>vector_to_search,int element){
-	for(std::vector<int>::iterator it = vector_to_search.begin(); it != vector_to_search.end(); ++it)
+static bool find_vector(std::vector<unsigned int>vector_to_search,int element){
+	for(std::vector<unsigned int>::iterator it = vector_to_search.begin(); it != vector_to_search.end(); ++it)
 		if (*it==element) return true;
 	return false;
 }
@@ -221,6 +221,7 @@ static bool find_vector(std::vector<int>vector_to_search,int element){
 //
 bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,unsigned int damage_source_index){//return whether the attacking card is RETURNED
 	bool if_returned=false;
+	Damage result={0,0,0};
 		User_decision decision=this->ask_for_decision(player_index);
 		//have a new array for the defense
 		int defend[52];
@@ -236,6 +237,9 @@ bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,un
 		}//switch
 		if (damage_to_deal.type==DARK) defend[GLOW]=4;
 		else defend[GLOW]=0;
+		if (damage_to_deal.type==ARROW||damage_to_deal.type==SWORD)
+			if (damage_to_deal.star>3) damage_to_deal.star=6;
+
 
 		//judge whether the choice of the user can defend the attack
 		int valid_defend_card_amount=0;
@@ -244,58 +248,72 @@ bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,un
 		//First check for Time_Return, Second check for Return, Third check for Time
 		//Fourth check for Little, Fifth check for Move, Sixth check for Mirror, Last check for common defending cards
 		if (find_vector(decision.card_indice_to_deal,RETURN)&&find_vector(decision.card_indice_to_deal,TIME)){//first check
-			damamge_to_deal=result;
+			damage_to_deal=result;
 			//take all the cards into hand
-			this->group_of_players[player_index].get_card_in_hand.merge(this->temp_deck_to_deal);
-		}else if (find_vector(decision.card_indice_to_deal,RETURN){//second check
+			this->group_of_players[player_index].get_card_in_hand().merge_deck(this->temp_deck_to_deal);
+			std::cout<<"Stupid choice. Time is within my control and so is your attack."<<std::endl;
+		}else if (find_vector(decision.card_indice_to_deal,RETURN)){//second check
 			damage_to_deal=result;
 			if_returned=true;
+			std::cout<<"Then time starts to flow...Attack cancelled."<<std::endl;
 		}else if (find_vector(decision.card_indice_to_deal,TIME)){//third check
 			damage_to_deal=result;
+			std::cout<<"Time will always forget you with your attack."<<std::endl;
 		}else if (find_vector(decision.card_indice_to_deal,LITTLE)){//fourth check
 			damage_to_deal.star-=2;
 			valid_defend_card_amount=1;
 		}else if (find_vector(decision.card_indice_to_deal,MOVE)&&damage_to_deal.star<=2){//fifth check
                         std::cout<<"Please choose which player to move the damage to:"<<std::endl;
-                        unsigned int new_index=this->group_of_players.size();
-                        std::cin>>new_index;
+       	                unsigned int new_index=this->group_of_players.size();
+               	        std::cin>>new_index;
                         new_index--;
-                        while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
-				
-                                std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
-                                std::cin>>new_index;
+       	                while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
+               	                std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
+                       	        std::cin>>new_index;
                         }//while
-                                std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
-                                if_returned=this->damage_settlement(damage_to_deal,new_index,player_index);
-		}else{//sixth check
-			if (find_vector(decision.card_indice_to_deal, MOVE)) std::cout<<"Unable to move "<<NAME[damage_to_deal]<<"."<<std::endl;
-			if (find_vector(decision.card_indice_to_deal,MIRROR)){
-				if (damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
-                                    damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT){//success
-                                        std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
-                                        if_return=this->damage_settlement(damage_to_deal,damage_source_index,player_index)
-                                }else std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
-			}
-
-			}else if (defend[decision.card_indice_to_deal[i]]>0){//common defend cards
-				valid_defend+=defend[decision.card_indice_to_deal[i]];
-				valid_defend_card_amount++;
-			}
+                        std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
+                        if_returned=this->damage_settlement(damage_to_deal,new_index,player_index);//move the damage
+		}else if (find_vector(decision.card_indice_to_deal,MIRROR)&&
+			  (damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
+			   damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT)){//sixth check
+			std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
+			if_returned=this->damage_settlement(damage_to_deal,damage_source_index,player_index);
+		}else{
+			if (find_vector(decision.card_indice_to_deal,MOVE)) std::cout<<"Unable to move "<<NAME[damage_to_deal.type]<<"."<<std::endl;
+			if (find_vector(decision.card_indice_to_deal,MIRROR)) std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
+			if (group_of_players[player_index].get_status(invisible)>0){//invisible status and maze_lord status should be added here
+				damage_to_deal=result;
+				std::cout<<"What you attack is only the void."<<std::endl;
+			}else if (group_of_players[player_index].get_status(maze_through)>=damage_to_deal.star){
+				damage_to_deal.star=0;
+				std::cout<<"You will get lost in the maze."<<std::endl<<"Attack defended!"<<std::endl;
+			}else if (find_vector(decision.card_indice_to_deal,WATERY)&&find_vector(decision.card_indice_to_deal,SHIELD)){//check for Watery_Shield 
+                                damage_to_deal=result;
+                                std::cout<<"Attack defended!"<<std::endl;
+                        }else{
+				if (group_of_players[player_index].get_status(maze_through)>0){
+					valid_defend+=group_of_players[player_index].get_status(maze_through);
+					std::cout<<"The maze is broken!"<<std::endl;
+				}
+				for (unsigned int i=0;i<decision.card_indice_to_deal.size();i++){
+					if (defend[decision.card_indice_to_deal[i]]>0){//common defend cards
+						valid_defend+=defend[decision.card_indice_to_deal[i]];
+						valid_defend_card_amount++;
+						if (defend[decision.card_indice_to_deal[i]]>2) valid_defend_card_amount++;
+					}
+				}//for traverse
+			}//else for common defend cards
+		}//else for status and common defend cards
 
 		//defend checking
 		int VALID_AMOUNT=2;
+		if (damage_to_deal.star>4) VALID_AMOUNT=damage_to_deal.star/2;
 		//special correction for Thunder_Shot
 		if (damage_to_deal.type==THUNDER&&damage_to_deal.star==4)
 			if (valid_defend<4){
 				valid_defend_card_amount=1;
-				damage_to_deal.star=5;//ensure that one one-star defend card cannot reduce any damamge
+				damage_to_deal.star=5;//ensure that single one-star defend card cannot reduce any damamge
 			}
-
-/*		switch (damage_to_deal.star){
-			case 5: VALID_AMOUNT=5;
-			case 6: VALID_AMOUNT=6;
-			case 7: VALID_AMOUNT=8;
-		}*/
 
 		damage_to_deal.star-=valid_defend;
 		if (valid_defend_card_amount>=VALID_AMOUNT||damage_to_deal.star<=0){//successfully defend
@@ -324,6 +342,7 @@ bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,un
 		}//if success
 		else{//if fail
 			if (damage_to_deal.star<=3) damage_to_deal.damage=1;
+			else if(damage_to_deal.star<=5&&damage_to_deal.type!=DARK) damage_to_deal.damage=2;
 			std::cout<<"You are damaged by "<<damage_to_deal.damage<<"."<<std::endl;
 			group_of_players[player_index].reduce_health((unsigned int)damage_to_deal.damage);
 			if (group_of_players[player_index].get_health()<=0)
@@ -331,8 +350,8 @@ bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,un
 			damage_to_deal.damage=0;
 		}
 
-	}//largest while
-	return result;
+	
+	return if_returned;
 }//function end
 
 // Function that checks the effect of the card in the temp_deck_to_deal
