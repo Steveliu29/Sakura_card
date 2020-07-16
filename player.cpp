@@ -62,8 +62,8 @@ void Player::set_enable_card_deal(bool enable_arg){
 
 // Getter for the player status
 //
-std::vector<enum Status> Player::get_status(){
-    return status;
+std::vector<Player_status> Player::get_status(){
+    return player_status;
 }
 
 // Function that force to kill a player
@@ -75,8 +75,11 @@ void Player::kill_player(){
 
 // Function that add a status to the player
 //
-void Player::add_status(enum Status status_to_add){
-    status.emplace_back(status_to_add);
+void Player::add_status(enum Status status_to_add, int rounds_to_add){
+    Player_status temp{};
+    temp.status = status_to_add;
+    temp.rounds_left = rounds_to_add;
+    player_status.emplace_back(temp);
 }
 
 // Function that remove a status from the plater
@@ -84,14 +87,37 @@ void Player::add_status(enum Status status_to_add){
 void Player::remove_status(enum Status status_to_remove){
     unsigned int index_to_remove{};
     if (check_status(status_to_remove,index_to_remove))
-            status.erase(status.begin() + index_to_remove);
+            player_status.erase(player_status.begin() + index_to_remove);
+}
+
+// Function taht remove the status with zero round left
+//
+void Player::remove_expired_status(){
+    for (int it = static_cast<int> (player_status.size()) - 1; it >= 0; it--){
+        if (player_status[it].rounds_left <= 0 && player_status[it].status != judger)
+            player_status.erase(player_status.begin() + it);
+    }
+}
+
+// Function that decrement all rounds by 1
+//
+void Player::decrement_status_round(){
+    for (auto it = 0; it < player_status.size(); it++)
+        player_status[it].rounds_left--;
+}
+
+// Function that decrement all rounds by a specific amount
+//
+void Player::decrement_status_round(int rounds_to_decrease){
+    for (auto it = 0; it < player_status.size(); it++)
+        player_status[it].rounds_left -= rounds_to_decrease;
 }
 
 // Function that checks if player has the status provided
 //
 bool Player::check_status(enum Status status_to_check){
-    for (auto it = 0; it < status.size(); it ++){
-        if (status[it] == status_to_check)
+    for (auto it = 0; it < player_status.size(); it ++){
+        if (player_status[it].status == status_to_check)
             return true;
     }
 
@@ -102,8 +128,8 @@ bool Player::check_status(enum Status status_to_check){
 // If the status is there, the index in the vector will also be returned
 //
 bool Player::check_status(enum Status status_to_check, unsigned int& index_to_return){
-    for (auto it = 0; it < status.size(); it ++){
-        if (status[it] == status_to_check){
+    for (auto it = 0; it < player_status.size(); it ++){
+        if (player_status[it].status == status_to_check){
             index_to_return = it;
             return true;
         }
