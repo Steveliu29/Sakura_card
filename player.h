@@ -44,13 +44,16 @@ public:
     bool                             get_enable_card_deal              ();
     void                             set_is_alive                      (bool alive_arg);
     void                             set_enable_card_deal              (bool enable_arg);
-    std::vector<Player_status>       get_status                        ();
+    unsigned int                     get_status                        (enum Status status_to_get);
+    std::vector<Player_status>       get_player_status                 ();
     void                             kill_player                       ();
     void                             add_status                        (enum Status status_to_add, int rounds_to_add);
     void                             remove_status                     (enum Status status_to_remove);
     void                             remove_expired_status             (); // will NOT remove judger status
     void                             decrement_status_round            ();
     void                             decrement_status_round            (int rounds_to_decrease);
+    void                             decrement_status_round            (enum Status status_to_decrement);
+    void                             decrement_status_round            (enum Status status_to_decrement, int rounds_to_decrease);
     bool                             check_status                      (enum Status status_to_check);
     bool                             check_status                      (enum Status status_to_check, unsigned int& index_to_return);
     void                             add_health                        (unsigned int health_to_add);

@@ -60,9 +60,22 @@ void Player::set_enable_card_deal(bool enable_arg){
     this -> enable_card_deal = enable_arg;
 }
 
+// Getter for the rounds left for a certain status
+//
+unsigned int Player::get_status (enum Status status_to_get){
+    unsigned int rounds_to_return{};
+    unsigned int temp_index{};
+
+    if (check_status(status_to_get,temp_index)){
+        rounds_to_return = player_status[temp_index].rounds_left;
+    }
+
+    return rounds_to_return;
+}
+
 // Getter for the player status
 //
-std::vector<Player_status> Player::get_status(){
+std::vector<Player_status> Player::get_player_status(){
     return player_status;
 }
 
@@ -77,9 +90,16 @@ void Player::kill_player(){
 //
 void Player::add_status(enum Status status_to_add, int rounds_to_add){
     Player_status temp{};
-    temp.status = status_to_add;
-    temp.rounds_left = rounds_to_add;
-    player_status.emplace_back(temp);
+    unsigned int index_to_modify{};
+
+    if (check_status(status_to_add, index_to_modify)){
+        player_status[index_to_modify].rounds_left = rounds_to_add;
+
+    }else{
+        temp.status = status_to_add;
+        temp.rounds_left = rounds_to_add;
+        player_status.emplace_back(temp);
+    }
 }
 
 // Function that remove a status from the plater
@@ -106,11 +126,29 @@ void Player::decrement_status_round(){
         player_status[it].rounds_left--;
 }
 
-// Function that decrement all rounds by a specific amount
+// Overloaded function that decrement all rounds by a specific amount
 //
 void Player::decrement_status_round(int rounds_to_decrease){
     for (auto it = 0; it < player_status.size(); it++)
         player_status[it].rounds_left -= rounds_to_decrease;
+}
+
+// Overloaded funtion that decrement the round of one status by 1
+//
+void Player::decrement_status_round(enum Status status_to_decrement){
+    unsigned int index_to_decrement{};
+
+    if (check_status(status_to_decrement, index_to_decrement))
+        player_status[index_to_decrement].rounds_left = player_status[index_to_decrement].rounds_left - 1;
+}
+
+// Overloaded function that decrement the round of one status by a specific amount
+//
+void Player::decrement_status_round(enum Status status_to_decrement, int rounds_to_decrease){
+    unsigned int index_to_decrement{};
+
+    if (check_status(status_to_decrement, index_to_decrement))
+        player_status[index_to_decrement].rounds_left = player_status[index_to_decrement].rounds_left - rounds_to_decrease;
 }
 
 // Function that checks if player has the status provided
