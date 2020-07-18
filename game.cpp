@@ -135,7 +135,7 @@ void Game::merge_discard_to_draw(){
 // Function that input users decision
 // A struct User_decision is returned
 //
-User_decision Game::ask_for_decision(unsigned int player_index){
+User_decision Game::ask_for_decision(unsigned int player_index,std::string type){//type to identify active/passive
 	User_decision decision{};
 	std::vector<unsigned int> user_input;
 
@@ -151,19 +151,47 @@ User_decision Game::ask_for_decision(unsigned int player_index){
 		}
 		user_input.push_back(input);
 	}
-	if (!valid) decision=this->ask_for_decision(player_index);//ask for another input if this is invalid
+	if (!valid) decision=this->ask_for_decision(player_index,type);//ask for another input if this is invalid
+	else{
+		//assign value to return
+		int i=0;
+		while (user_input[i]!=0){
+			decision.card_indice_to_deal.push_back(group_of_players[player_index].get_card_in_hand().get_card(user_input[i]).identify());
+//			this->group_of_players[player_index].deal_card(this->temp_deck_to_deal,user_input[i]);
+			i++;
+		}
 
-	//assign value to return
-	int i=0;
-	while (user_input[i]!=0){
-		decision.card_indice_to_deal.push_back(group_of_players[player_index].get_card_in_hand().get_card(user_input[i]).identify());
-		i++;
+		if (user_input[0]==0)//when the user input a 0 as the first input
+			decision.end_round = true;
+		else decision.end_round = false;
+
+		//deal the cards to the proper deck
+		if (type=="attack"){//check whether it is a valid active card dealing
+			if (decision.card_indice_to_deal.size()>1){
+				std::vector<Card> tmp_card_vector;
+				for (size_t i=0;i<decision.card_indice_to_deal.size();i++){
+					Card tmp_card(decision.card_indice_to_deal[i]);
+					tmp_card_vector.push_back(tmp_card);
+				}
+				if(combo_check(decision.card_indice_to_deal.size(),tmp_card_vector)==Invalid){//combo re-asking case
+					decision=this->ask_for_decision(player_index,type);
+					//ensure that only when the choice is valid, the card will be dealt
+					//avoid multiple dealing
+					valid=false;
+				}
+			}
+			if (decision.card_indice_to_deal.size()==1&&ATTACK[decision.card_indice_to_deal[0]]==0&&!IS_SCROLL[decision.card_indice_to_deal[0]]){//single card re-asking case
+			       	decision=this->ask_for_decision(player_index,type);
+				valid=false;
+			}
+			if (valid)
+				for (int j=0;user_input[j]!=0;j++)//deal to the tmp deck for the active cards
+					this->group_of_players[player_index].deal_card(this->temp_deck_to_deal,user_input[i]);
+		}else if (type=="defend")
+			if (valid)
+				for (int j=0;user_input[j]!=0;j++)//deal to the discard deck for the passive cards
+					this->group_of_players[player_index].deal_card(this->discard_deck,user_input[i]);
 	}
-
-	if (decision.card_indice_to_deal[0]==0)
-		decision.end_round = true;
-	else decision.end_round = false;
-
 	return decision;
 }
 
@@ -186,6 +214,7 @@ void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 		std::cin>>choice;
 		if (choice=="yes"||choice=="Yes"||choice=="YES"||choice=="y"||choice=="Y"){
 			group_of_players[dying].add_health(1);
+			//deal the card to the discard deck
 			group_of_players[save].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
 		}
 	}
@@ -193,18 +222,22 @@ void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 
 //Function to handle the dying status
 //
-void Game::death_settlement(unsigned int player_index){
-	for (unsigned int i; i<this->group_of_players.size()&&group_of_players[player_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
-		if (group_of_players[player_index].get_health()<1)
-			this->ask_for_health(player_index,i,FLOWER);
+void Game::death_settlement(unsigned int player_index,unsigned int dying_index){
+	for (unsigned int i; i<this->group_of_players.size()&&group_of_players[dying_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
+		//enable players to use cards
+		this->group_of_players[i].set_enable_card_deal(true);
+		if (group_of_players[dying_index].get_health()<1)
+			this->ask_for_health(dying_index,i,FLOWER);
 		else break;
 		if (group_of_players[player_index].get_health()<1)
-			this->ask_for_health(player_index,i,SONG);
+			this->ask_for_health(dying_index,i,SONG);
 		else break;
 		if (group_of_players[player_index].get_health()<1)
-			this->ask_for_health(player_index,i,SWEET);
+			this->ask_for_health(dying_index,i,SWEET);
 		else break;
+		this->group_of_players[i].set_enable_card_deal(false);
 	}
+	this->group_of_players[player_index].set_enable_card_deal(true);
 	//kill the player if no FLOWER or SONG or SWEET is dealt
 	if (group_of_players[player_index].get_health()<1) group_of_players[player_index].kill_player();
 }
@@ -219,139 +252,147 @@ static bool find_vector(std::vector<unsigned int>vector_to_search,int element){
 
 //Function to handle the damage
 //
-bool Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,unsigned int damage_source_index){//return whether the attacking card is RETURNED
+Damage_return_type Game::damage_settlement(Damage damage_to_deal, unsigned int player_index,unsigned int damage_source_index){//return whether the attacking card is RETURNED
 	bool if_returned=false;
 	Damage result={0,0,0};
-		User_decision decision=this->ask_for_decision(player_index);
-		//have a new array for the defense
-		int defend[52];
-		for (int i=0;i<52;i++) defend[i]=DEFEND[i];
-		//load the special attacking-defending rules
-		switch(damage_to_deal.type){
-			case WINDY: defend[ELY]=0;break;
-			case LIGHT: 
-			case DARK: defend[WINDY]=4;defend[SHADOW]=0;defend[FIREY]=4;defend[WATERY]=4;defend[EARTHY]=4;break;
-			case FIREY: defend[WOOD]=0;defend[WAVE]=3;break;
-			case WATERY: defend[BUBBLES]=0;defend[WAVE]=0;defend[FREEZE]=3;break;
-			case EARTHY: defend[WOOD]=3;break;
-		}//switch
-		if (damage_to_deal.type==DARK) defend[GLOW]=4;
-		else defend[GLOW]=0;
-		if (damage_to_deal.type==ARROW||damage_to_deal.type==SWORD)
-			if (damage_to_deal.star>3) damage_to_deal.star=6;
+	Damage_return_type return_type;
+	User_decision decision=this->ask_for_decision(player_index,"defend");
+	//have a new array for the defense
+	int defend[52];
+	for (int i=0;i<52;i++) defend[i]=DEFEND[i];
+	//load the special attacking-defending rules
+	switch(damage_to_deal.type){
+		case WINDY: defend[ELY]=0;break;
+		case LIGHT: 
+		case DARK: defend[WINDY]=4;defend[SHADOW]=0;defend[FIREY]=4;defend[WATERY]=4;defend[EARTHY]=4;break;
+		case FIREY: defend[WOOD]=0;defend[WAVE]=3;break;
+		case WATERY: defend[BUBBLES]=0;defend[WAVE]=0;defend[FREEZE]=3;break;
+		case EARTHY: defend[WOOD]=3;break;
+	}//switch
+	if (damage_to_deal.type==DARK) defend[GLOW]=4;
+	else defend[GLOW]=0;
+	if (damage_to_deal.type==ARROW||damage_to_deal.type==SWORD)
+		if (damage_to_deal.star>3) damage_to_deal.star=6;
 
 
-		//judge whether the choice of the user can defend the attack
-		int valid_defend_card_amount=0;
-		int valid_defend=0;
-		//collect the defend cards
-		//First check for Time_Return, Second check for Return, Third check for Time
-		//Fourth check for Little, Fifth check for Move, Sixth check for Mirror, Last check for common defending cards
-		if (find_vector(decision.card_indice_to_deal,RETURN)&&find_vector(decision.card_indice_to_deal,TIME)){//first check
+	//judge whether the choice of the user can defend the attack
+	int valid_defend_card_amount=0;
+	int valid_defend=0;
+	//collect the defend cards
+	//First check for Time_Return, Second check for Return, Third check for Time
+	//Fourth check for Little, Fifth check for Move, Sixth check for Mirror, Last check for common defending cards
+	if (find_vector(decision.card_indice_to_deal,RETURN)&&find_vector(decision.card_indice_to_deal,TIME)){//first check
+		damage_to_deal=result;
+		//take all the cards into hand
+		this->group_of_players[player_index].get_card_in_hand().merge_deck(this->temp_deck_to_deal);
+		std::cout<<"Stupid choice. Time is within my control and so is your attack."<<std::endl;
+	}else if (find_vector(decision.card_indice_to_deal,RETURN)){//second check
+		damage_to_deal=result;
+		if_returned=true;
+		std::cout<<"Then time starts to flow...Attack cancelled."<<std::endl;
+	}else if (find_vector(decision.card_indice_to_deal,TIME)){//third check
+		damage_to_deal=result;
+		std::cout<<"Time will always forget you with your attack."<<std::endl;
+	}else if (find_vector(decision.card_indice_to_deal,LITTLE)){//fourth check
+		damage_to_deal.star-=2;
+		valid_defend_card_amount=1;
+	}else if (find_vector(decision.card_indice_to_deal,MOVE)&&damage_to_deal.star<=2){//fifth check
+		std::cout<<"Please choose which player to move the damage to:"<<std::endl;
+		unsigned int new_index=this->group_of_players.size();
+		std::cin>>new_index;
+		new_index--;
+		while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
+			std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
+			std::cin>>new_index;
+		}//while
+		std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
+		return_type=this->damage_settlement(damage_to_deal,new_index,player_index);//move the damage
+		if_returned=return_type.is_returned;//ensure is_returned will not be cover-written
+	}else if (find_vector(decision.card_indice_to_deal,MIRROR)&&
+			(damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
+			 damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT)){//sixth check
+		std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
+		return_type=this->damage_settlement(damage_to_deal,damage_source_index,player_index);
+		if_returned=return_type.is_returned;
+	}else{
+		if (find_vector(decision.card_indice_to_deal,MOVE)) std::cout<<"Unable to move "<<NAME[damage_to_deal.type]<<"."<<std::endl;
+		if (find_vector(decision.card_indice_to_deal,MIRROR)) std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
+		if (group_of_players[player_index].get_status(invisible)>0){//invisible status and maze_lord status should be added here
 			damage_to_deal=result;
-			//take all the cards into hand
-			this->group_of_players[player_index].get_card_in_hand().merge_deck(this->temp_deck_to_deal);
-			std::cout<<"Stupid choice. Time is within my control and so is your attack."<<std::endl;
-		}else if (find_vector(decision.card_indice_to_deal,RETURN)){//second check
+			std::cout<<"What you attack is only the void."<<std::endl;
+		}else if (group_of_players[player_index].get_status(maze_through)>=damage_to_deal.star){
+			damage_to_deal.star=0;
+			std::cout<<"You will get lost in the maze."<<std::endl<<"Attack defended!"<<std::endl;
+		}else if (find_vector(decision.card_indice_to_deal,WATERY)&&find_vector(decision.card_indice_to_deal,SHIELD)){//check for Watery_Shield 
 			damage_to_deal=result;
-			if_returned=true;
-			std::cout<<"Then time starts to flow...Attack cancelled."<<std::endl;
-		}else if (find_vector(decision.card_indice_to_deal,TIME)){//third check
-			damage_to_deal=result;
-			std::cout<<"Time will always forget you with your attack."<<std::endl;
-		}else if (find_vector(decision.card_indice_to_deal,LITTLE)){//fourth check
-			damage_to_deal.star-=2;
-			valid_defend_card_amount=1;
-		}else if (find_vector(decision.card_indice_to_deal,MOVE)&&damage_to_deal.star<=2){//fifth check
-                        std::cout<<"Please choose which player to move the damage to:"<<std::endl;
-       	                unsigned int new_index=this->group_of_players.size();
-               	        std::cin>>new_index;
-                        new_index--;
-       	                while (new_index>=this->group_of_players.size()||!(group_of_players[new_index].get_is_alive())){
-               	                std::cout<<"Invalid choice. Please input a different ID."<<std::endl;
-                       	        std::cin>>new_index;
-                        }//while
-                        std::cout<<"Damage moved successfully to player "<<new_index+1<<"!"<<std::endl;
-                        if_returned=this->damage_settlement(damage_to_deal,new_index,player_index);//move the damage
-		}else if (find_vector(decision.card_indice_to_deal,MIRROR)&&
-			  (damage_to_deal.type==LIGHT||damage_to_deal.type==FIREY||damage_to_deal.type==WATERY||
-			   damage_to_deal.type==THUNDER||damage_to_deal.type==SHOT)){//sixth check
-			std::cout<<NAME[damage_to_deal.type]<<" reflected!"<<std::endl;
-			if_returned=this->damage_settlement(damage_to_deal,damage_source_index,player_index);
+			std::cout<<"Attack defended!"<<std::endl;
 		}else{
-			if (find_vector(decision.card_indice_to_deal,MOVE)) std::cout<<"Unable to move "<<NAME[damage_to_deal.type]<<"."<<std::endl;
-			if (find_vector(decision.card_indice_to_deal,MIRROR)) std::cout<<"Unable to reflect "<<NAME[damage_to_deal.type]<<"."<<std::endl;
-			if (group_of_players[player_index].get_status(invisible)>0){//invisible status and maze_lord status should be added here
-				damage_to_deal=result;
-				std::cout<<"What you attack is only the void."<<std::endl;
-			}else if (group_of_players[player_index].get_status(maze_through)>=damage_to_deal.star){
-				damage_to_deal.star=0;
-				std::cout<<"You will get lost in the maze."<<std::endl<<"Attack defended!"<<std::endl;
-			}else if (find_vector(decision.card_indice_to_deal,WATERY)&&find_vector(decision.card_indice_to_deal,SHIELD)){//check for Watery_Shield 
-                                damage_to_deal=result;
-                                std::cout<<"Attack defended!"<<std::endl;
-                        }else{
-				if (group_of_players[player_index].get_status(maze_through)>0){
-					valid_defend+=group_of_players[player_index].get_status(maze_through);
-					std::cout<<"The maze is broken!"<<std::endl;
-				}
-				for (unsigned int i=0;i<decision.card_indice_to_deal.size();i++){
-					if (defend[decision.card_indice_to_deal[i]]>0){//common defend cards
-						valid_defend+=defend[decision.card_indice_to_deal[i]];
-						valid_defend_card_amount++;
-						if (defend[decision.card_indice_to_deal[i]]>2) valid_defend_card_amount++;
-					}
-				}//for traverse
-			}//else for common defend cards
-		}//else for status and common defend cards
-
-		//defend checking
-		int VALID_AMOUNT=2;
-		if (damage_to_deal.star>4) VALID_AMOUNT=damage_to_deal.star/2;
-		//special correction for Thunder_Shot
-		if (damage_to_deal.type==THUNDER&&damage_to_deal.star==4)
-			if (valid_defend<4){
-				valid_defend_card_amount=1;
-				damage_to_deal.star=5;//ensure that single one-star defend card cannot reduce any damamge
+			if (group_of_players[player_index].get_status(maze_through)>0){
+				valid_defend+=group_of_players[player_index].get_status(maze_through);
+				std::cout<<"The maze is broken!"<<std::endl;
 			}
+			for (unsigned int i=0;i<decision.card_indice_to_deal.size();i++){
+				if (defend[decision.card_indice_to_deal[i]]>0){//common defend cards
+					valid_defend+=defend[decision.card_indice_to_deal[i]];
+					valid_defend_card_amount++;
+					if (defend[decision.card_indice_to_deal[i]]>2) valid_defend_card_amount++;
+				}
+			}//for traverse
+		}//else for common defend cards
+	}//else for status and common defend cards
 
-		damage_to_deal.star-=valid_defend;
-		if (valid_defend_card_amount>=VALID_AMOUNT||damage_to_deal.star<=0){//successfully defend
-			std::cout<<"Defend successfully!"<<std::endl;
-			damage_to_deal.damage=0;
-			//check for Thunder_Shot combo
-			Card tmp_card_1(THUNDER);
-			Card tmp_card_2(SHOT);
-			if (group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1)&&group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2)){
-				std::cout<<"Do you want to use the THUNDER SHOT combo?"<<std::endl;
-				std::string choice;
-				std::cin>>choice;
-				if (choice=="yes"||choice=="YES"||choice=="Yes"||choice=="Y"||choice=="y"){
-					//deal THUNDER and SHOT to the discard deck
-					unsigned int tmp_index;
-					group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1,tmp_index);
-					group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
-					group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2,tmp_index);
-					group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
-					//assign value to the return result
-					result.damage=2;
-					result.type=THUNDER;
-					result.star=4;
-				}//if choose to thunder_shot
-			}//if able to Thunder_Shot
-		}//if success
-		else{//if fail
-			if (damage_to_deal.star<=3) damage_to_deal.damage=1;
-			else if(damage_to_deal.star<=5&&damage_to_deal.type!=DARK) damage_to_deal.damage=2;
-			std::cout<<"You are damaged by "<<damage_to_deal.damage<<"."<<std::endl;
-			group_of_players[player_index].reduce_health((unsigned int)damage_to_deal.damage);
-			if (group_of_players[player_index].get_health()<=0)
-				this->death_settlement(player_index);
-			damage_to_deal.damage=0;
+	//defend checking
+	int VALID_AMOUNT=2;
+	if (damage_to_deal.star>4) VALID_AMOUNT=damage_to_deal.star/2;
+	//special correction for Thunder_Shot
+	if (damage_to_deal.type==THUNDER&&damage_to_deal.star==4)
+		if (valid_defend<4){
+			valid_defend_card_amount=1;
+			damage_to_deal.star=5;//ensure that single one-star defend card cannot reduce any damamge
 		}
 
+	damage_to_deal.star-=valid_defend;
+	if (valid_defend_card_amount>=VALID_AMOUNT||damage_to_deal.star<=0){//successfully defend
+		std::cout<<"Defend successfully!"<<std::endl;
+		damage_to_deal.damage=0;
+		//check for Thunder_Shot combo
+		Card tmp_card_1(THUNDER);
+		Card tmp_card_2(SHOT);
+		if (group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1)&&group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2)){
+			std::cout<<"Do you want to use the THUNDER SHOT combo?"<<std::endl;
+			std::string choice;
+			std::cin>>choice;
+			if (choice=="yes"||choice=="YES"||choice=="Yes"||choice=="Y"||choice=="y"){
+				//deal THUNDER and SHOT to the discard deck
+				unsigned int tmp_index;
+				group_of_players[player_index].get_card_in_hand().search_card(tmp_card_1,tmp_index);
+				group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
+				group_of_players[player_index].get_card_in_hand().search_card(tmp_card_2,tmp_index);
+				group_of_players[player_index].get_card_in_hand().deal_card_to(this->discard_deck,tmp_index);
+				//assign value to the return result
+				return_type.is_thunder_shot=true;
+				//result.damage=2;
+				//result.type=THUNDER;
+				//result.star=4;
+			}//if choose to thunder_shot
+		}//if able to Thunder_Shot
+	}//if success
+	else{//if fail
+		if (damage_to_deal.star<=3) damage_to_deal.damage=1;
+		else if(damage_to_deal.star<=5&&damage_to_deal.type!=DARK) damage_to_deal.damage=2;
+		std::cout<<"You are damaged by "<<damage_to_deal.damage<<"."<<std::endl;
+		group_of_players[player_index].reduce_health((unsigned int)damage_to_deal.damage);
+		if (group_of_players[player_index].get_health()<=0)
+			this->death_settlement(damage_source_index,player_index);
+		damage_to_deal.damage=0;
+	}
 	
-	return if_returned;
+	return_type.is_returned=if_returned;
+
+	//clear the temporary deck after each judgement
+	this->discard_deck.merge_deck(temp_deck_to_deal);
+
+	return return_type;
 }//function end
 
 // Function that checks the effect of the card in the temp_deck_to_deal
@@ -365,10 +406,10 @@ void Game::check_effect(){
 			std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
 			else if (tempo_combo == Double_Element){
 			}
-		// ADD COMBO EFFECT
+			// ADD COMBO EFFECT
 		}else if (temp_deck_to_deal.size() == 1){
-		Card single_card = temp_deck_to_deal.get_card(0);
-		// ADD SINGLE CARD EFFECT
+			Card single_card = temp_deck_to_deal.get_card(0);
+			// ADD SINGLE CARD EFFECT
 		}else std::cout<<"Please choose a card to deal."<<std::endl;
 	}
 }
@@ -420,19 +461,15 @@ void Game::player_round_start(unsigned int player_index){
 	if (player_index < group_of_players.size() && group_of_players[player_index].get_is_alive()){
 		group_of_players[player_index].set_enable_card_deal(true);
 
-		User_decision decision = ask_for_decision(player_index);
+		User_decision decision = ask_for_decision(player_index,"attack");
 		while (group_of_players[player_index].get_is_alive() && false == decision.end_round){
 			player_deal_card(player_index, decision.card_indice_to_deal);
 			//check_effect();
-			decision = ask_for_decision(player_index);
+			decision = ask_for_decision(player_index,"attack");
 		}
 		// Unfinished
-
-
-
 	}
 }
-
 
 // ***********************************************************************************************
 

@@ -113,5 +113,6 @@ const int EARTHY=51;
 
 const int ATTACK[52]={3,0,1,0,2,2,0,1,0,1,0,0,1,4,0,0,0,1,0,0,0,0,3,0,0,2,4,3,2,0,0,0,0,0,0,0,1,0,0,1,0,2,1,0,0,0,0,2,0,0,0,3};//0 when the card cannot be used as an attack card
 const int DEFEND[52]={3,2,2,0,2,0,1,0,0,0,0,2,0,3,0,2,2,0,0,-1,0,0,3,0,2,2,3,3,0,1,0,5,0,0,5,1,2,1,2,0,1,0,0,-1,-1,-2,0,0,0,0,0,3};//0 when the card cannot be used as a defend card, -1 when the card is a special defend card, -2 when the card is "the little"
+const bool IS_SCROLL[52]={false,false,true,true,false,false,false,false,true,false,true,true,false,false,true,false,false,false,true,false,true,true,false,false,false,false,false,false,false,false,true,false,true,true,false,false,false,false,false,false,false,false,false,true,false,true,true,false,false,false,true,false};//VOICE,CREATE,MOVE,THROUGH,DREAM declared not as a scroll because cannot deal actively within the dealing period
 
 #endif
