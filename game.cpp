@@ -139,58 +139,49 @@ User_decision Game::ask_for_decision(unsigned int player_index,std::string type)
 	User_decision decision{};
 	std::vector<unsigned int> user_input;
 
+	//determine the cards to play
 	int input=1;
-	bool valid=true;
+	//user input the integers
 	std::cout<<"Please input the card you want to deal. Input 0 to end the input.";
 	while (input!=0){//0 for the end of the input
 		std::cin>>input;
-		if (input>group_of_players[player_index].get_card_in_hand().get_deck_size()){//check whether the input is valid
+		//the "if" branch only works for back-end testing
+		//no such problems possible after the front-end is completed
+		if (input>group_of_players[player_index].get_card_in_hand().get_deck_size())//check whether such a card is valid to be discarded
 			std::cout<<"Invalid card input."<<std::endl;
-			input=0;
-			valid=false;
-		}
-		user_input.push_back(input);
+		else user_input.push_back(input);
 	}
-	if (!valid) decision=this->ask_for_decision(player_index,type);//ask for another input if this is invalid
-	else{
-		//assign value to return
+
+	//determine if the turn is ended and return if user ends its turn
+	if (user_input[0]==0){
+		decision.end_round = true;
+		return decision;
+	}
+
+	//check for the validity of the decision according to the game rule
+	if (type=="attack"){//check whether it is a valid active card dealing
+		if (decision.card_indice_to_deal.size()>1){//potential combo cards
+			//construct a vector with cards corresponding to the indice
+			std::vector<Card> tmp_card_vector;
+			for (size_t i=0;i<decision.card_indice_to_deal.size();i++){
+				Card tmp_card(group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify());
+				tmp_card_vector.push_back(tmp_card);
+			}
+			if (combo_check(decision.card_indice_to_deal.size(),tmp_card_vector)==Invalid)//combo re-asking case
+				return this->ask_for_decision(player_index,type);
+		}else if (decision.card_indice_to_deal.size()==1&&ATTACK[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]).identify()]==0&&!IS_SCROLL[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]).identify()])//single card re-asking case
+		       	return this->ask_for_decision(player_index,type);
+	}else if (type=="defend"){//check whether it is a valid passive card dealing
 		int i=0;
-		while (user_input[i]!=0){
-			decision.card_indice_to_deal.push_back(group_of_players[player_index].get_card_in_hand().get_card(user_input[i]).identify());
-//			this->group_of_players[player_index].deal_card(this->temp_deck_to_deal,user_input[i]);
-			i++;
+		bool is_little = false;
+		for (int i=0; user_input[i]!=0; i++){//combo defend card
+			if (DEFEND[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify()]==0)//invalid: non-defensive card
+				return this->ask_for_decision(player_index,type);
+			else if (is_little==true)//invalid: little with other defend cards
+				return this->ask_for_decision(player_index,type);
+			if (group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify()==LITTLE)
+				is_little = true;
 		}
-
-		if (user_input[0]==0)//when the user input a 0 as the first input
-			decision.end_round = true;
-		else decision.end_round = false;
-
-		//deal the cards to the proper deck
-		if (type=="attack"){//check whether it is a valid active card dealing
-			if (decision.card_indice_to_deal.size()>1){
-				std::vector<Card> tmp_card_vector;
-				for (size_t i=0;i<decision.card_indice_to_deal.size();i++){
-					Card tmp_card(decision.card_indice_to_deal[i]);
-					tmp_card_vector.push_back(tmp_card);
-				}
-				if(combo_check(decision.card_indice_to_deal.size(),tmp_card_vector)==Invalid){//combo re-asking case
-					decision=this->ask_for_decision(player_index,type);
-					//ensure that only when the choice is valid, the card will be dealt
-					//avoid multiple dealing
-					valid=false;
-				}
-			}
-			if (decision.card_indice_to_deal.size()==1&&ATTACK[decision.card_indice_to_deal[0]]==0&&!IS_SCROLL[decision.card_indice_to_deal[0]]){//single card re-asking case
-			       	decision=this->ask_for_decision(player_index,type);
-				valid=false;
-			}
-			if (valid)
-				for (int j=0;user_input[j]!=0;j++)//deal to the tmp deck for the active cards
-					this->group_of_players[player_index].deal_card(this->temp_deck_to_deal,user_input[i]);
-		}else if (type=="defend")
-			if (valid)
-				for (int j=0;user_input[j]!=0;j++)//deal to the discard deck for the passive cards
-					this->group_of_players[player_index].deal_card(this->discard_deck,user_input[i]);
 	}
 	return decision;
 }
@@ -399,19 +390,20 @@ Damage_return_type Game::damage_settlement(Damage damage_to_deal, unsigned int p
 //
 
 void Game::check_effect(){
-	if (temp_deck_to_deal.size() > 1){
+	if (temp_deck_to_deal.size() > 1){//check for combo
 		enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
-		if (tempo_combo == Invalid){
+		if (tempo_combo == Invalid){//invalid combo
 			group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
 			std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
-			else if (tempo_combo == Double_Element){
-			}
-			// ADD COMBO EFFECT
-		}else if (temp_deck_to_deal.size() == 1){
-			Card single_card = temp_deck_to_deal.get_card(0);
-			// ADD SINGLE CARD EFFECT
-		}else std::cout<<"Please choose a card to deal."<<std::endl;
-	}
+		}
+		else if (tempo_combo == Double_Element){
+
+		}
+		// ADD COMBO EFFECT
+	}else if (temp_deck_to_deal.size() == 1){
+		Card single_card = temp_deck_to_deal.get_card(0);
+		// ADD SINGLE CARD EFFECT
+	}else std::cout<<"Please choose a card to deal."<<std::endl;
 }
 
 
