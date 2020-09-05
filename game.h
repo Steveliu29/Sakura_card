@@ -21,6 +21,7 @@ struct User_decision{
     std::vector<unsigned int> card_indice_to_deal;
     bool end_round = false;
     int player_id;
+    enum Combo combo_type;
 };
 
 struct Damage_return_type{

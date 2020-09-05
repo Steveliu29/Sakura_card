@@ -4,7 +4,7 @@
 #include <vector>
 #include "card_info.h"
 
-enum Combo {Invalid,Double_Element,Element_Arrow,Element_Sword,Freezing_Rain,Invisible,Light_Dark,Maze_Illusion,Maze_Lord,Nightmare,Powerful_Light,Quadra_Element,The_Big,The_Twin,Thunder_Shot,Time_Return,Triple_Element,Water_Shield};
+enum Combo {Invalid,Big_Attack,Big_Delay,Big_Scroll,Big_Twin,Double_Element,Element_Arrow,Element_Sword,Freezing_Rain,Invisible,Light_Dark,Maze_Illusion,Maze_Lord,Nightmare,Powerful_Light,Quadra_Element,Thunder_Shot,Time_Return,Triple_Element,Twin_Attack,Twin_Delay,Twin_Scroll,Water_Shield};
 
 typedef struct DAMAGE{
 	int damage;

@@ -132,12 +132,27 @@ void Game::merge_discard_to_draw(){
 	draw_deck.merge_deck(discard_deck);
 }
 
+static int get_target_player_id(vector<Player> & players){
+	int player_id_tmp=-1;
+	while (player_id_tmp<0){
+		cout<<"Please input the target player id: ";
+		cin>>player_id_tmp;
+		if (player_id_tmp<=0||player_id_tmp>players.size()){
+			player_id_tmp=-1;
+			cout<<"Invalid target!"<<endl;
+		}else if (!players[player_id_tmp].get_is_alive){
+			player_id_tmp=-1;
+			cout<<"Dead target!"<<endl;
+		}
+	}
+	return player_id_tmp;
+}
+
 // Function that input users decision
 // A struct User_decision is returned
 //
-User_decision Game::ask_for_decision(unsigned int player_index,std::string type){//type to identify active/passive
+User_decision Game::ask_for_decision(unsigned int player_index,const std::string type){//type to identify active/passive
 	User_decision decision{};
-	std::vector<unsigned int> user_input;
 
 	//determine the cards to play
 	int input=1;
@@ -149,7 +164,7 @@ User_decision Game::ask_for_decision(unsigned int player_index,std::string type)
 		//no such problems possible after the front-end is completed
 		if (input>group_of_players[player_index].get_card_in_hand().get_deck_size())//check whether such a card is valid to be discarded
 			std::cout<<"Invalid card input."<<std::endl;
-		else user_input.push_back(input);
+		else decision.card_indice_to_deal.push_back(input);
 	}
 
 	//determine if the turn is ended and return if user ends its turn
@@ -157,29 +172,43 @@ User_decision Game::ask_for_decision(unsigned int player_index,std::string type)
 		decision.end_round = true;
 		return decision;
 	}
-
+	decision.combo_type = Invalid;
+	//construct a vector with cards corresponding to the indice
+	std::vector<Card> tmp_card_vector;
+	if (decision.card_indice_to_deal.size()>2){
+		for (size_t i=0;decision.card_indice_to_deal[i]!=0;i++){
+			Card tmp_card(group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]-1).identify());
+			tmp_card_vector.push_back(tmp_card);
+		}
+		decision.combo_type=combo_check(decision.card_indice_to_deal.size(),tmp_card_vector);
+	}
 	//check for the validity of the decision according to the game rule
 	if (type=="attack"){//check whether it is a valid active card dealing
-		if (decision.card_indice_to_deal.size()>1){//potential combo cards
-			//construct a vector with cards corresponding to the indice
-			std::vector<Card> tmp_card_vector;
-			for (size_t i=0;i<decision.card_indice_to_deal.size();i++){
-				Card tmp_card(group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify());
-				tmp_card_vector.push_back(tmp_card);
-			}
-			if (combo_check(decision.card_indice_to_deal.size(),tmp_card_vector)==Invalid)//combo re-asking case
+		if (decision.card_indice_to_deal.size()>2){//potential combo cards
+			
+			if (decision.combo_type==Invalid||decision.combo_type==Time_Return||decision.combo_type==Water_Shield){//combo re-asking case
+				cout<<"Invalid combo!"<<endl;
 				return this->ask_for_decision(player_index,type);
-		}else if (decision.card_indice_to_deal.size()==1&&ATTACK[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]).identify()]==0&&!IS_SCROLL[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]).identify()])//single card re-asking case
-		       	return this->ask_for_decision(player_index,type);
+			}else if (decision.combo_type!=Big_Twin&&decision.combo_type!=Big_Scroll&&decision.combo_type!=Invisible&&decision.combo_type!=Maze_Lord&&decision.combo_type!=Twin_Scroll)//combo valid case
+				decision.player_id=get_target_player_id(group_of_players);
+		}else{//single card case
+			if (decision.card_indice_to_deal.size()==2&&ATTACK[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]-1).identify()]==0&&!IS_SCROLL[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[0]-1).identify()]){//single card re-asking case
+				cout<<"Invalid choice!"<<endl;
+			       	return this->ask_for_decision(player_index,type);
+			}else decision.player_id=get_target_player_id(group_of_players);
 	}else if (type=="defend"){//check whether it is a valid passive card dealing
-		int i=0;
 		bool is_little = false;
-		for (int i=0; user_input[i]!=0; i++){//combo defend card
-			if (DEFEND[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify()]==0)//invalid: non-defensive card
+		for (int i=0; decision.card_indice_to_deal[i]!=0; i++){//combo defend card
+			if (decision.combo_type == Water_Shield||decision.combo_type==Time_Return) break;
+			else if (DEFEND[group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]-1).identify()]==0){//invalid: non-defensive card
+				cout<<"There is a non-defensive card in your choice!"<<endl;
 				return this->ask_for_decision(player_index,type);
-			else if (is_little==true)//invalid: little with other defend cards
+			}
+			else if (is_little==true){//invalid: little with other defensive cards
+				cout<<"You cannot use LITTLE with other defensive cards!"<<endl;
 				return this->ask_for_decision(player_index,type);
-			if (group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]).identify()==LITTLE)
+			}
+			if (group_of_players[player_index].get_card_in_hand().get_card(decision.card_indice_to_deal[i]-1).identify()==LITTLE)
 				is_little = true;
 		}
 	}

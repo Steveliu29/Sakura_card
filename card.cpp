@@ -52,26 +52,28 @@ int combo_check_unordered(std::vector<Card> card_in_combo,int card_1,int card_2)
 
 enum Combo combo_check_bigtwin(int card_to_check,int big_or_twin){
 	enum Combo result=Invalid;
-	if (ATTACK[card_to_check]>0) result=The_Big;
-	else switch(card_to_check){
-		case 3:
-		case 8:
-		case 10:
-		case 11:
-		case 14:
-		case 30:
-		case 32:
-		case 33:
-		case 36:
-		case 43:
-		case 44:
-		case 46: result=The_Big;break;
-		default: result=Invalid;
+	switch(card_to_check){//scroll cards
+		case FLOWER:
+		case SONG:
+		case SWEET:
+		case ERASE:
+		case CREATE: 
+		case GLOW:
+			if (big_or_twin==BIG) result=Big_Scroll;
+			else if (big_or_twin==TWIN) result=Twin_Scroll;
+			break;
+		case TWIN:
+		case BIG: result=Big_Twin;break;
+		case FREEZE:
+		case SILENT:
+		case SLEEP:
+		case MAZE: if (big_or_twin==BIG) result=Big_Delay;
+			   else if (big_or_twin==TWIN) result=Twin_Delay;
+			   break;
+		default: if (ATTACK[card_to_check]>0)
+				if (big_or_twin==BIG) result=Big_Attack;
+			 	else result=Twin_Attack;
 	}
-	if (result!=Invalid)
-		if (big_or_twin==BIG)
-			result=The_Big;
-		else result=The_Twin;
 	return result;
 }
 
