@@ -50,7 +50,7 @@ public:
     void single_player_draw_card(unsigned int player_index, unsigned int number_of_cards);
     void all_player_draw_card(); // draw to 5 cards at the end of all players' rounds
     void player_round_start(unsigned int player_index);
-
+    void start();
 };
 
 

@@ -10,61 +10,70 @@ Version 1.00  - 13/07/2020
 
 #include "game.h"
 
+#define CLASSICAL 1
+#define CLASSICAL_PLAYER 4
+#define SOLO 2
+#define SOLO_PLAYER 2
+#define MANIA 3
+#define MANIA_PLAYER 8
+#define CARD_MAX 52
+
 // Empty constructor for the Game class
 //
 Game::Game(){
-	const Card card_no_0{0};
-	const Card card_no_1{1};
-	const Card card_no_2{2};
-	const Card card_no_3{3};
-	const Card card_no_4{4};
-	const Card card_no_5{5};
-	const Card card_no_6{6};
-	const Card card_no_7{7};
-	const Card card_no_8{8};
-	const Card card_no_9{9};
-	const Card card_no_10{10};
-	const Card card_no_11{11};
-	const Card card_no_12{12};
-	const Card card_no_13{13};
-	const Card card_no_14{14};
-	const Card card_no_15{15};
-	const Card card_no_16{16};
-	const Card card_no_17{17};
-	const Card card_no_18{18};
-	const Card card_no_19{19};
-	const Card card_no_20{20};
-	const Card card_no_21{21};
-	const Card card_no_22{22};
-	const Card card_no_23{23};
-	const Card card_no_24{24};
-	const Card card_no_25{25};
-	const Card card_no_26{26};
-	const Card card_no_27{27};
-	const Card card_no_28{28};
-	const Card card_no_29{29};
-	const Card card_no_30{30};
-	const Card card_no_31{31};
-	const Card card_no_32{32};
-	const Card card_no_33{33};
-	const Card card_no_34{34};
-	const Card card_no_35{35};
-	const Card card_no_36{36};
-	const Card card_no_37{37};
-	const Card card_no_38{38};
-	const Card card_no_39{39};
-	const Card card_no_40{40};
-	const Card card_no_41{41};
-	const Card card_no_42{42};
-	const Card card_no_43{43};
-	const Card card_no_44{44};
-	const Card card_no_45{45};
-	const Card card_no_46{46};
-	const Card card_no_47{47};
-	const Card card_no_48{48};
-	const Card card_no_49{49};
-	const Card card_no_50{50};
-	const Card card_no_51{51};
+	//cards initialization
+	const Card card_no_0{WINDY};
+	const Card card_no_1{SHADOW};
+	const Card card_no_2{ILLUSION};
+	const Card card_no_3{FLOWER};
+	const Card card_no_4{MIST};
+	const Card card_no_5{STORM};
+	const Card card_no_6{FLOAT};
+	const Card card_no_7{FIGHT};
+	const Card card_no_8{SONG};
+	const Card card_no_9{SHOT};
+	const Card card_no_10{SWEET};
+	const Card card_no_11{FREEZE};
+	const Card card_no_12{ARROW};
+	const Card card_no_13{LIGHT};
+	const Card card_no_14{TWIN};
+	const Card card_no_15{TREE};
+	const Card card_no_16{SHIELD};
+	const Card card_no_17{POWER};
+	const Card card_no_18{LOOP};
+	const Card card_no_19{MIRROR};
+	const Card card_no_20{BIG};
+	const Card card_no_21{CHANGE};
+	const Card card_no_22{FIREY};
+	const Card card_no_23{VOICE};
+	const Card card_no_24{LOCK};
+	const Card card_no_25{CLOUD};
+	const Card card_no_26{DARK};
+	const Card card_no_27{WATERY};
+	const Card card_no_28{RAIN};
+	const Card card_no_29{JUMP};
+	const Card card_no_30{SILENT};
+	const Card card_no_31{TIME};
+	const Card card_no_32{FREEZE};
+	const Card card_no_33{SLEEP};
+	const Card card_no_34{RETURN};
+	const Card card_no_35{DASH};
+	const Card card_no_36{CREATE};
+	const Card card_no_37{BUBBLES};
+	const Card card_no_38{WAVE};
+	const Card card_no_39{SAND};
+	const Card card_no_40{ELY};
+	const Card card_no_41{THUNDER};
+	const Card card_no_42{SWORD};
+	const Card card_no_43{GLOW};
+	const Card card_no_44{MOVE};
+	const Card card_no_45{LITTLE};
+	const Card card_no_46{MAZE};
+	const Card card_no_47{SNOWY};
+	const Card card_no_48{THROUGH};
+	const Card card_no_49{DREAM};
+	const Card card_no_50{LIBRA};
+	const Card card_no_51{EARTHY};
 
 	draw_deck.add_card(card_no_0);
 	draw_deck.add_card(card_no_1);
@@ -118,14 +127,29 @@ Game::Game(){
 	draw_deck.add_card(card_no_49);
 	draw_deck.add_card(card_no_50);
 	draw_deck.add_card(card_no_51);
+
+	int gamemode=0;
+	while (gamemode<1||gamemode>3){
+		std::cout<<"Please select the gamemode:"<<std::endl<<"1. Classical mode(4 players)"<<std::endl<<"2. Solo mode(2 players)"<<std::endl<<"3. Mania mode(10 players)"<<std::endl;
+		std::cin>>gamemode;
+		if (gamemode<1||gamemode>3) std::cout<<"Invalid input!"<<std::endl;
+	}
+	int player_amount;
+	if (gamemode==CLASSICAL) player_amount=CLASSICAL_PLAYER;
+	else if(gamemode==SOLO) player_amount=SOLO_PLAYER;
+	else if(gamemode==MANIA) player_amount=MANIA_CARD;
+	for (int i=0;i<player_amount;i++){
+		Player player_tmp;
+		group_of_players.push_back(player_tmp);
+	}
 }
 
 // Function that shuffle the discard_deck and merge it to draw_deck
 //
 void Game::merge_discard_to_draw(){
-	unsigned int rand_num =  get_cut(10,draw_deck.get_deck_size()) % 51;
+	unsigned int rand_num =  get_cut(10,draw_deck.get_deck_size()) % (CARD_MAX-1);//10 here is a just a random number
 	for (auto it = 0; it < rand_num ; it ++){
-		unsigned int shuffle_index = get_cut(0,draw_deck.get_deck_size()) % 51;
+		unsigned int shuffle_index = get_cut(0,draw_deck.get_deck_size()) % (CARD_MAX-1);
 		draw_deck.single_shuffle(shuffle_index);
 	}
 
@@ -278,8 +302,8 @@ Damage_return_type Game::damage_settlement(Damage damage_to_deal, unsigned int p
 	Damage_return_type return_type;
 	User_decision decision=this->ask_for_decision(player_index,"defend");
 	//have a new array for the defense
-	int defend[52];
-	for (int i=0;i<52;i++) defend[i]=DEFEND[i];
+	int defend[CARD_MAX];
+	for (int i=0;i<CARD_MAX;i++) defend[i]=DEFEND[i];
 	//load the special attacking-defending rules
 	switch(damage_to_deal.type){
 		case WINDY: defend[ELY]=0;break;
@@ -490,6 +514,15 @@ void Game::player_round_start(unsigned int player_index){
 		}
 		// Unfinished
 	}
+}
+
+
+//The function that starts the game and run everything
+//can be treated as the main function of the game
+void Game::start(){
+
+
+
 }
 
 // ***********************************************************************************************
