@@ -9,7 +9,6 @@ Version 1.00  - 13/07/2020
 */
 
 #include "game.h"
-
 #define CLASSICAL 1
 #define CLASSICAL_PLAYER 4
 #define SOLO 2
@@ -18,7 +17,10 @@ Version 1.00  - 13/07/2020
 #define MANIA_PLAYER 8
 #define CARD_MAX 52
 
+int player_in_turn = 0;
+
 // Empty constructor for the Game class
+// initialize the cards to the draw deck and initialize the players
 //
 Game::Game(){
 	//cards initialization
@@ -129,7 +131,7 @@ Game::Game(){
 	draw_deck.add_card(card_no_51);
 
 	int gamemode=0;
-	while (gamemode<1||gamemode>3){
+	while (gamemode<1||gamemode>3){//gamemode selection
 		std::cout<<"Please select the gamemode:"<<std::endl<<"1. Classical mode(4 players)"<<std::endl<<"2. Solo mode(2 players)"<<std::endl<<"3. Mania mode(10 players)"<<std::endl;
 		std::cin>>gamemode;
 		if (gamemode<1||gamemode>3) std::cout<<"Invalid input!"<<std::endl;
@@ -137,8 +139,8 @@ Game::Game(){
 	int player_amount;
 	if (gamemode==CLASSICAL) player_amount=CLASSICAL_PLAYER;
 	else if(gamemode==SOLO) player_amount=SOLO_PLAYER;
-	else if(gamemode==MANIA) player_amount=MANIA_CARD;
-	for (int i=0;i<player_amount;i++){
+	else if(gamemode==MANIA) player_amount=MANIA_PLAYER;
+	for (int i=0;i<player_amount;i++){//create #player_amount players
 		Player player_tmp;
 		group_of_players.push_back(player_tmp);
 	}
@@ -156,6 +158,9 @@ void Game::merge_discard_to_draw(){
 	draw_deck.merge_deck(discard_deck);
 }
 
+// Ask for choosing a target player
+// The player id is returned
+//
 static int get_target_player_id(vector<Player> & players){
 	int player_id_tmp=-1;
 	while (player_id_tmp<0){
@@ -172,7 +177,7 @@ static int get_target_player_id(vector<Player> & players){
 	return player_id_tmp;
 }
 
-// Function that input users decision
+// Function that inputs users decision
 // A struct User_decision is returned
 //
 User_decision Game::ask_for_decision(unsigned int player_index,const std::string type){//type to identify active/passive
@@ -220,6 +225,7 @@ User_decision Game::ask_for_decision(unsigned int player_index,const std::string
 				cout<<"Invalid choice!"<<endl;
 			       	return this->ask_for_decision(player_index,type);
 			}else decision.player_id=get_target_player_id(group_of_players);
+		}
 	}else if (type=="defend"){//check whether it is a valid passive card dealing
 		bool is_little = false;
 		for (int i=0; decision.card_indice_to_deal[i]!=0; i++){//combo defend card
@@ -245,10 +251,10 @@ void Game::player_deal_card(unsigned int player_index, std::vector<unsigned int>
 
 	for (auto it = 0; it < card_indice.size(); it++)
 		group_of_players[player_index].get_card_in_hand().deal_card_to(temp_deck_to_deal,card_indice[it] - it);
-
 }
 
 //Player "dying" ask for a health recover from player "save"
+//card_index for the special card type to ask(FLOWER, SONG, SWEET)
 void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 	Card tmp_card(card_index);
 	unsigned int tmp_index;
@@ -265,25 +271,28 @@ void Game::ask_for_health(unsigned int dying,unsigned int save,int card_index){
 }
 
 //Function to handle the dying status
-//
+//player_index for the player who is in its turn
+//dying index for the player who is dying
 void Game::death_settlement(unsigned int player_index,unsigned int dying_index){
+	//traverse all the players
 	for (unsigned int i; i<this->group_of_players.size()&&group_of_players[dying_index].get_health()<1;i++){//ask for FLOWER or SONG or SWEET
 		//enable players to use cards
 		this->group_of_players[i].set_enable_card_deal(true);
-		if (group_of_players[dying_index].get_health()<1)
-			this->ask_for_health(dying_index,i,FLOWER);
+		//ask for saving
+		if (group_of_players[dying_index].get_health()<1) this->ask_for_health(dying_index,i,FLOWER);
 		else break;
-		if (group_of_players[player_index].get_health()<1)
-			this->ask_for_health(dying_index,i,SONG);
+		if (group_of_players[dying_index].get_health()<1) this->ask_for_health(dying_index,i,SONG);
 		else break;
-		if (group_of_players[player_index].get_health()<1)
-			this->ask_for_health(dying_index,i,SWEET);
+		if (group_of_players[dying_index].get_health()<1) this->ask_for_health(dying_index,i,SWEET);
 		else break;
+
+		//disable players to use cards
 		this->group_of_players[i].set_enable_card_deal(false);
 	}
+	//enable the player to use cards to continue its turn
 	this->group_of_players[player_index].set_enable_card_deal(true);
 	//kill the player if no FLOWER or SONG or SWEET is dealt
-	if (group_of_players[player_index].get_health()<1) group_of_players[player_index].kill_player();
+	if (group_of_players[dying_index].get_health()<1) group_of_players[dying_index].kill_player();
 }
 
 //Function to find element in a vector
@@ -292,7 +301,6 @@ static bool find_vector(std::vector<unsigned int>vector_to_search,int element){
 		if (*it==element) return true;
 	return false;
 }
-
 
 //Function to handle the damage
 //
@@ -445,28 +453,47 @@ Damage_return_type Game::damage_settlement(Damage damage_to_deal, unsigned int p
 void Game::check_effect(){
 	if (temp_deck_to_deal.size() > 1){//check for combo
 		enum Combo temp_combo = combo_check(temp_deck_to_deal().get_deck_size(), temp_deck_to_deal.get_all_cards_in_deck());
-		if (tempo_combo == Invalid){//invalid combo
+		//traverse all the combos
+		if (temp_combo == Invalid){//invalid combo
 			group_of_players[player_index].get_card_in_hand().merge_deck(temp_deck_to_deal);
 			std::cout<<"Invalid combo. Please check your card selection."<<std::endl;
+		}else if (temp_combo == Big_Attack){
+		}else if (temp_combo == Big_Delay){
+		}else if (temp_combo == Big_Scroll){
+		}else if (temp_combo == Big_Twin){
+		}else if (temp_combo == Double_Element){
+		}else if (temp_combo == Element_Arrow){
+		}else if (temp_combo == Element_Sword){
+		}else if (temp_combo == Freezing_Rain){
+		}else if (temp_combo == Invisible){
+		}else if (temp_combo == Light_Dark){
+		}else if (temp_combo == Maze_Illusion){
+		}else if (temp_combo == Maze_Lord){
+		}else if (temp_combo == Nightmare){
+		}else if (temp_combo == Powerful_Light){
+		}else if (temp_combo == Quadra_Element){
+		}else if (temp_combo == Thunder_Shot){
+		}else if (temp_combo == Time_Return){
+		}else if (temp_combo == Triple_Element){
+		}else if (temp_combo == Twin_Attack){
+		}else if (temp_combo == Twin_Delay){
+		}else if (temp_combo == Twin_Scroll){
+		}else if (temp_combo == Water_Shield){
 		}
-		else if (tempo_combo == Double_Element){
-
-		}
-		// ADD COMBO EFFECT
 	}else if (temp_deck_to_deal.size() == 1){
 		Card single_card = temp_deck_to_deal.get_card(0);
-		// ADD SINGLE CARD EFFECT
+	// ADD SINGLE CARD EFFECT
 	}else std::cout<<"Please choose a card to deal."<<std::endl;
 }
 
 
-// The function to call a game start by setting the number of players in the game
+// The function to call a game start
 //
 void Game::game_start(unsigned int number_of_players){
-	Player temp{};
+	/*Player temp{};
 
 	for (auto it = 0 ; it < number_of_players ; it++)
-		group_of_players.emplace_back(temp);
+		group_of_players.emplace_back(temp);*/
 
 	unsigned int rand_num =  get_cut(10,draw_deck.get_deck_size()) % 51;
 	for (auto it = 0; it < rand_num ; it ++){
